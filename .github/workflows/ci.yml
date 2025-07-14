@@ -27,5 +27,5 @@ jobs:
     - name: Install dependencies
       run: poetry install
 
-    - name: Run script
-      run: poetry run python src/move_zwift_files.py
+    - name: Run tests
+      run: poetry run pytest
