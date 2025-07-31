@@ -16,6 +16,6 @@ for filename in os.listdir(source_folder):
     dst_file = os.path.join(destination_folder, filename)
     if os.path.isfile(src_file):
         shutil.move(src_file, dst_file)
-        print(f"Moved: {src_file} -> {dst_file}")
+        print(f"Moved: {filename}")
 
 print("All Zwift .fit files moved successfully.")
