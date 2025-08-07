@@ -3,7 +3,7 @@ import shutil
 
 # Define source and destination folders
 source_folder = r"C:\Users\aucla\OneDrive\Documents\Zwift\Activities"
-destination_folder = r"G:\My Drive\projects\health\zwift data"
+destination_folder = r"G:\My Drive\projects\zwift\data"
 
 # Ensure destination exists
 os.makedirs(destination_folder, exist_ok=True)
