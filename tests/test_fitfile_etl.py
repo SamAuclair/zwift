@@ -8,6 +8,7 @@ import pytest
 from src.fitfile_etl import (
     clean_fitfile,
     get_existing_filenames_from_bigquery,
+    get_fitfile_names_from_folder,
     parse_fitfile,
     upload_to_bigquery,
 )
@@ -38,6 +39,37 @@ def test_clean_fitfile():
         "enhanced_speed",
     ]
     assert cleaned_df.height > 0
+
+
+def test_get_fitfile_names_from_folder():
+    # Create a temporary directory with test files
+    import tempfile
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Create some test .fit files
+        test_files = ["test1.fit", "test2.fit", "test3.fit"]
+        for filename in test_files:
+            file_path = os.path.join(temp_dir, filename)
+            with open(file_path, "w") as f:
+                f.write("dummy content")
+        
+        # Create some non-.fit files that should be ignored
+        non_fit_files = ["test.txt", "data.csv", "readme.md"]
+        for filename in non_fit_files:
+            file_path = os.path.join(temp_dir, filename)
+            with open(file_path, "w") as f:
+                f.write("dummy content")
+        
+        # Test the function
+        result = get_fitfile_names_from_folder(temp_dir)
+        
+        # Assertions
+        assert isinstance(result, set)
+        assert result == {"test1.fit", "test2.fit", "test3.fit"}
+        assert len(result) == 3
+        
+        # Verify non-.fit files are not included
+        for non_fit_file in non_fit_files:
+            assert non_fit_file not in result
 
 
 def test_get_existing_filenames_from_bigquery():
