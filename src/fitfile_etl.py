@@ -9,13 +9,14 @@ ZWIFT_DATA_FOLDER = r"G:\My Drive\projects\zwift\data"
 
 
 def parse_fitfile(fitfile_path):
-    fitfile = FitFile(fitfile_path)
-    records = []
-    for record in fitfile.get_messages("record"):
-        record_data = {}
-        for field in record:
-            record_data[field.name] = field.value
-        records.append(record_data)
+    with open(fitfile_path, "rb") as f:
+        fitfile = FitFile(f)
+        records = []
+        for record in fitfile.get_messages("record"):
+            record_data = {}
+            for field in record:
+                record_data[field.name] = field.value
+            records.append(record_data)
     if records:
         df = pl.DataFrame(records)
     else:
@@ -63,12 +64,12 @@ if __name__ == "__main__":
 
     # Get all FIT files from zwift data folder
     all_fit_files = get_fitfile_names_from_folder(ZWIFT_DATA_FOLDER)
-    print(f"Found {len(all_fit_files)} FIT files in {ZWIFT_DATA_FOLDER}")
+    print(f"Found {len(all_fit_files)} FIT files in Google Drive")
 
     # Get existing filenames from BigQuery
     try:
         existing_files = get_existing_filenames_from_bigquery(client, BQ_DATASET, BQ_TABLE)
-        print(f"Found {len(existing_files)} existing files in BigQuery")
+        print(f"Found {len(existing_files)} FIT files uploaded to BigQuery database")
     except Exception as e:
         print(f"Could not query existing files (table may not exist): {e}")
         existing_files = set()
@@ -83,7 +84,6 @@ if __name__ == "__main__":
         total_rows_uploaded = 0
         for filename in new_files:
             file_path = os.path.join(ZWIFT_DATA_FOLDER, filename)
-            print(f"Processing {filename}...")
 
             try:
                 df = parse_fitfile(file_path)
@@ -92,10 +92,15 @@ if __name__ == "__main__":
                     pandas_df = df.to_pandas()
                     output_rows, table_id = upload_to_bigquery(pandas_df, client, BQ_DATASET, BQ_TABLE)
                     total_rows_uploaded += output_rows
-                    print(f"  Loaded {output_rows} rows from {filename}")
+                    print(f"Processed '{filename}' successfully ({output_rows} rows).")
                 else:
-                    print(f"  No data found in {filename}")
+                    print(f"Deleting empty file: {filename}.")
+                    os.remove(file_path)
             except Exception as e:
-                print(f"  Error processing {filename}: {e}")
+                if "CRC Mismatch" in str(e):
+                    print(f"Deleting corrupted file: {filename}.")
+                    os.remove(file_path)
+                else:
+                    print(f"Error processing {filename}: {e}")
 
         print(f"\nTotal: Loaded {total_rows_uploaded} rows from {len(new_files)} files")
