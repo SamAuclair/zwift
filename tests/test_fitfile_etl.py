@@ -5,7 +5,12 @@ import pandas as pd
 import polars as pl
 import pytest
 
-from src.fitfile_etl import clean_fitfile, parse_fitfile, upload_to_bigquery
+from src.fitfile_etl import (
+    clean_fitfile,
+    get_existing_filenames_from_bigquery,
+    parse_fitfile,
+    upload_to_bigquery,
+)
 
 
 def test_parse_fitfile():
@@ -33,6 +38,40 @@ def test_clean_fitfile():
         "enhanced_speed",
     ]
     assert cleaned_df.height > 0
+
+
+def test_get_existing_filenames_from_bigquery():
+    # Mock BigQuery client and query result
+    mock_client = MagicMock()
+    mock_client.project = "test_project"
+
+    # Create mock rows representing BigQuery results
+    mock_row1 = MagicMock()
+    mock_row1.file_name = "2023-04-04-12-33-06.fit"
+    mock_row2 = MagicMock()
+    mock_row2.file_name = "2023-04-05-14-20-15.fit"
+    mock_row3 = MagicMock()
+    mock_row3.file_name = "2023-04-06-16-45-30.fit"
+
+    # Mock query result
+    mock_result = [mock_row1, mock_row2, mock_row3]
+    mock_client.query.return_value = mock_result
+
+    # Call the function
+    existing_files = get_existing_filenames_from_bigquery(mock_client, "test_dataset", "test_table")
+
+    # Assertions
+    expected_query = """
+    SELECT DISTINCT file_name
+    FROM `test_project.test_dataset.test_table`
+    WHERE file_name IS NOT NULL
+    """
+    mock_client.query.assert_called_once_with(expected_query)
+
+    # Check that the function returns a set with correct filenames
+    expected_files = {"2023-04-04-12-33-06.fit", "2023-04-05-14-20-15.fit", "2023-04-06-16-45-30.fit"}
+    assert existing_files == expected_files
+    assert isinstance(existing_files, set)
 
 
 def test_upload_to_bigquery_calls_load_table_from_dataframe():
