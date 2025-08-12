@@ -58,6 +58,8 @@ def upload_to_bigquery(df, client, dataset, table):
 
 
 if __name__ == "__main__":
+    print("Loading Zwift .fit files to BigQuery...")
+
     client = bigquery.Client.from_service_account_json("zwift-data-loader-key.json")
     BQ_DATASET = "zwift_data"
     BQ_TABLE = "zwift_fitfile_records"
@@ -69,18 +71,16 @@ if __name__ == "__main__":
     # Get existing filenames from BigQuery
     try:
         existing_files = get_existing_filenames_from_bigquery(client, BQ_DATASET, BQ_TABLE)
-        print(f"Found {len(existing_files)} FIT files uploaded to BigQuery database")
+        print(f"Found {len(existing_files)} FIT files in BigQuery database")
     except Exception as e:
         print(f"Could not query existing files (table may not exist): {e}")
         existing_files = set()
 
     # Find new files to process
     new_files = all_fit_files - existing_files
-    print(f"Found {len(new_files)} new files to process")
+    print(f"Found {len(new_files)} new file(s) to load")
 
-    if not new_files:
-        print("No new files to process")
-    else:
+    if new_files:
         total_rows_uploaded = 0
         for filename in new_files:
             file_path = os.path.join(ZWIFT_DATA_FOLDER, filename)
@@ -92,7 +92,7 @@ if __name__ == "__main__":
                     pandas_df = df.to_pandas()
                     output_rows, table_id = upload_to_bigquery(pandas_df, client, BQ_DATASET, BQ_TABLE)
                     total_rows_uploaded += output_rows
-                    print(f"Processed '{filename}' successfully ({output_rows} rows).")
+                    print(f"   Processed '{filename}' successfully ({output_rows} rows).")
                 else:
                     print(f"Deleting empty file: {filename}.")
                     os.remove(file_path)
@@ -103,4 +103,6 @@ if __name__ == "__main__":
                 else:
                     print(f"Error processing {filename}: {e}")
 
-        print(f"\nTotal: Loaded {total_rows_uploaded} rows from {len(new_files)} files")
+        print(f"Total: Loaded {total_rows_uploaded} rows from {len(new_files)} files")
+
+print("--------------------------------")
