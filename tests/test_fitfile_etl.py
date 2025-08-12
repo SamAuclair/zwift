@@ -19,10 +19,12 @@ def test_parse_fitfile():
 
 def test_clean_fitfile():
     test_fitfile_path = os.path.join(os.path.dirname(__file__), "2023-04-04-12-33-06.fit")
+    test_filename = "2023-04-04-12-33-06.fit"
     df = parse_fitfile(test_fitfile_path)
-    cleaned_df = clean_fitfile(df)
+    cleaned_df = clean_fitfile(df, test_filename)
 
     assert cleaned_df.columns == [
+        "file_name",
         "timestamp",
         "heart_rate",
         "power",
