@@ -1,0 +1,12 @@
+zwift:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      keyfile: ..\zwift-data-loader-key.json
+      project: zwift-466113
+      dataset: zwift_data
+      threads: 4
+      location: US
+      job_execution_timeout_seconds: 1800
