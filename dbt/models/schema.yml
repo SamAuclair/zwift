@@ -1,0 +1,31 @@
+
+version: 2
+
+sources:
+  - name: zwift_data
+    description: "Raw Zwift data tables"
+    tables:
+      - name: zwift_fitfile_records
+        description: "Raw fitfile records from Zwift"
+
+models:
+  - name: zwift_augmented_records
+    description: "Zwift .FIT file records with additional computed fields."
+    columns:
+      - name: file_name
+        data_tests:
+          - not_null
+      - name: timestamp
+        data_tests:
+          - not_null
+          - unique
+      - name: local_timestamp
+        data_tests:
+          - not_null
+          - unique
+      - name: heart_rate
+      - name: power
+      - name: cadence
+      - name: speed_ms
+      - name: speed_kmh
+        
