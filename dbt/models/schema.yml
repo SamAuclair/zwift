@@ -9,7 +9,7 @@ sources:
         description: "Raw fitfile records from Zwift"
 
 models:
-  - name: zwift_augmented_records
+  - name: augmented_records
     description: "Zwift .FIT file records with additional computed fields."
     columns:
       - name: file_name
@@ -28,4 +28,38 @@ models:
       - name: cadence
       - name: speed_ms
       - name: speed_kmh
-        
+  - name: training
+    description: "Zwift records aggregated by training session."
+    columns:
+      - name: file_name
+        data_tests:
+          - not_null
+          - unique
+      - name: start_time
+        data_tests:
+          - not_null
+      - name: end_time
+        data_tests:
+          - not_null
+      - name: duration
+      - name: distance
+      - name: avg_speed_kmh
+      - name: avg_power
+      - name: avg_heart_rate
+      - name: avg_cadence
+      - name: max_heart_rate
+      - name: max_power
+      - name: max_cadence
+      - name: max_speed_kmh
+  - name: zone
+    description: "Time spent in each cardio zone by training session."
+    columns:
+      - name: file_name
+        data_tests:
+          - not_null
+          - unique
+      - name: time_zone_1
+      - name: time_zone_2
+      - name: time_zone_3
+      - name: time_zone_4
+      - name: time_zone_5
