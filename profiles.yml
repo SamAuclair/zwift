@@ -4,7 +4,7 @@ zwift:
     dev:
       type: bigquery
       method: service-account
-      keyfile: ..\zwift-data-loader-key.json
+      keyfile: zwift-data-loader-key.json
       project: zwift-466113
       dataset: zwift_data
       threads: 4

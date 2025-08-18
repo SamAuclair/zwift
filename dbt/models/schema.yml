@@ -5,11 +5,11 @@ sources:
   - name: zwift_data
     description: "Raw Zwift data tables"
     tables:
-      - name: zwift_fitfile_records
+      - name: fitfile_data
         description: "Raw fitfile records from Zwift"
 
 models:
-  - name: augmented_records
+  - name: augmented_data
     description: "Zwift .FIT file records with additional computed fields."
     columns:
       - name: file_name

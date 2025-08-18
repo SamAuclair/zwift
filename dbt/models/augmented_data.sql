@@ -10,4 +10,4 @@ select
     coalesce(speed, enhanced_speed) as speed_ms,
     3.6 * coalesce(speed, enhanced_speed) as speed_kmh,
     
-from {{ source('zwift_data', 'zwift_fitfile_records') }}
+from {{ source('zwift_data', 'fitfile_data') }}

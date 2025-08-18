@@ -105,7 +105,8 @@ def upload_to_bigquery(df, client, dataset, table):
     Upload a pandas DataFrame to a BigQuery table.
 
     Loads the provided DataFrame into the specified BigQuery table using
-    the BigQuery client's load_table_from_dataframe method.
+    the BigQuery client's load_table_from_dataframe method with explicit schema
+    to ensure timestamp column is cast as TIMESTAMP type.
 
     Args:
         df (pandas.DataFrame): DataFrame containing the data to upload.
@@ -117,7 +118,20 @@ def upload_to_bigquery(df, client, dataset, table):
         tuple: A tuple containing (number of rows uploaded, full table ID).
     """
     table_id = f"{client.project}.{dataset}.{table}"
-    job = client.load_table_from_dataframe(df, table_id)
+
+    # Define schema to ensure timestamp is cast as TIMESTAMP type
+    schema = [
+        bigquery.SchemaField("file_name", "STRING"),
+        bigquery.SchemaField("timestamp", "TIMESTAMP"),
+        bigquery.SchemaField("heart_rate", "INTEGER"),
+        bigquery.SchemaField("power", "INTEGER"),
+        bigquery.SchemaField("cadence", "INTEGER"),
+        bigquery.SchemaField("speed", "FLOAT"),
+        bigquery.SchemaField("enhanced_speed", "FLOAT"),
+    ]
+
+    job_config = bigquery.LoadJobConfig(schema=schema)
+    job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
     job.result()
     return job.output_rows, table_id
 
@@ -127,7 +141,7 @@ if __name__ == "__main__":
 
     client = bigquery.Client.from_service_account_json("zwift-data-loader-key.json")
     BQ_DATASET = "zwift_data"
-    BQ_TABLE = "zwift_fitfile_records"
+    BQ_TABLE = "fitfile_data"
 
     # Get all FIT files from zwift data folder
     all_fit_files = get_fitfile_names_from_folder(ZWIFT_DATA_FOLDER)

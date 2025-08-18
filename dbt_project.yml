@@ -2,8 +2,8 @@ name: 'zwift'
 version: '1.0.0'
 profile: 'zwift'
 
-model-paths: ["models"]
-test-paths: ["tests"]
+model-paths: ["dbt/models"]
+test-paths: ["dbt/tests"]
 
 models:
   zwift:
