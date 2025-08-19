@@ -44,6 +44,7 @@ def test_clean_fitfile():
 def test_get_fitfile_names_from_folder():
     # Create a temporary directory with test files
     import tempfile
+
     with tempfile.TemporaryDirectory() as temp_dir:
         # Create some test .fit files
         test_files = ["test1.fit", "test2.fit", "test3.fit"]
@@ -51,22 +52,22 @@ def test_get_fitfile_names_from_folder():
             file_path = os.path.join(temp_dir, filename)
             with open(file_path, "w") as f:
                 f.write("dummy content")
-        
+
         # Create some non-.fit files that should be ignored
         non_fit_files = ["test.txt", "data.csv", "readme.md"]
         for filename in non_fit_files:
             file_path = os.path.join(temp_dir, filename)
             with open(file_path, "w") as f:
                 f.write("dummy content")
-        
+
         # Test the function
         result = get_fitfile_names_from_folder(temp_dir)
-        
+
         # Assertions
         assert isinstance(result, set)
         assert result == {"test1.fit", "test2.fit", "test3.fit"}
         assert len(result) == 3
-        
+
         # Verify non-.fit files are not included
         for non_fit_file in non_fit_files:
             assert non_fit_file not in result
@@ -122,9 +123,13 @@ def test_upload_to_bigquery_calls_load_table_from_dataframe():
     output_rows, table_id = upload_to_bigquery(df, mock_client, "test_dataset", "test_table")
 
     # Assertions
-    mock_client.load_table_from_dataframe.assert_called_once_with(
-        df, "test_project.test_dataset.test_table"
-    )
+    mock_client.load_table_from_dataframe.assert_called_once()
+
+    # Check that it was called with the right arguments
+    call_args = mock_client.load_table_from_dataframe.call_args
+    assert call_args[0][0].equals(df)
+    assert call_args[0][1] == "test_project.test_dataset.test_table"
+    assert "job_config" in call_args[1]
     mock_job.result.assert_called_once()
     assert output_rows == 2
     assert table_id == "test_project.test_dataset.test_table"
