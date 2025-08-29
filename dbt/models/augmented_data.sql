@@ -2,8 +2,9 @@
 
 select
     file_name,
-    timestamp,
     DATETIME(timestamp, "America/New_York") as local_timestamp,
+    DATE(DATETIME(timestamp, "America/New_York")) as date,
+    TIME(DATETIME(timestamp, "America/New_York")) as time,
     heart_rate,
     power,
     cadence,

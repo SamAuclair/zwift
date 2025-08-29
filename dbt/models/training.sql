@@ -1,10 +1,10 @@
 {{ config(materialized='table') }}
 
 select
-    file_name,
-    min(local_timestamp) as start_time,
-    max(local_timestamp) as end_time,
-    DATETIME_DIFF(max(local_timestamp), min(local_timestamp), SECOND) as duration,
+    date,
+    min(time) as start_time,
+    max(time) as end_time,
+    TIME_DIFF(max(time), min(time), SECOND) as duration,
     round(sum(speed_ms)/ 1000, 1) as distance_km,
     round(avg(speed_kmh), 1) as avg_speed_kmh,
     round(avg(power), 0) as avg_power,
@@ -16,6 +16,5 @@ select
     round(max(speed_kmh), 1) as max_speed_kmh
     
 from {{ ref('augmented_data') }}
-group by file_name
-having DATETIME_DIFF(max(local_timestamp), min(local_timestamp), SECOND) >= 600
-order by min(local_timestamp) desc
+group by date
+order by date desc
