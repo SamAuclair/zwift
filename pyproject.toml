@@ -6,7 +6,7 @@ authors = [
     {name = "Your Name",email = "you@example.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.9, <3.13"
 dependencies = [
     "polars (>=1.31.0,<2.0.0)",
     "fitparse (>=1.2.0,<2.0.0)",
@@ -14,7 +14,9 @@ dependencies = [
     "pyarrow (>=20.0.0,<21.0.0)",
     "google-cloud-bigquery (>=3.35.0,<4.0.0)",
     "pandas-gbq (>=0.29.2,<0.30.0)",
-    "dbt-bigquery (>=1.10.1,<2.0.0)"
+    "dbt-bigquery (>=1.10.1,<2.0.0)",
+    "apache-airflow (>=2.10.0,<3.0.0)",
+    "apache-airflow-providers-google (>=10.0.0,<11.0.0)"
 ]
 
 
