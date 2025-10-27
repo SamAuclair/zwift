@@ -196,6 +196,9 @@ cython_debug/
 # Custom
 zwift-data-loader-key.json
 
+# Streamlit
+.streamlit/secrets.toml
+
 # dbt
 target/
 dbt_packages/

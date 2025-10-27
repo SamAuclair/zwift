@@ -2,6 +2,13 @@
 
 A Python ETL pipeline for processing Zwift FIT files and uploading cycling data to Google BigQuery for analysis.
 
+The project showcases:
+- ETL pipeline development (Python)
+- Cloud data storage and processing (Google Cloud Platform, BigQuery)
+- Data transformation and modeling (DBT)
+- Interactive dashboard development (Streamlit)
+- Data visualization (Plotly)
+
 ## Overview
 
 This project automates the collection and processing of Zwift cycling activity data by:
