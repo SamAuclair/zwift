@@ -11,6 +11,40 @@ from google.cloud import bigquery
 
 st.set_page_config(page_title="Global Metrics", page_icon="📊", layout="wide")
 
+# Custom CSS for card styling
+st.markdown(
+    """
+    <style>
+    div[data-testid="metric-container"] {
+        background-color: #262626;
+        border: 2px solid #505050;
+        padding: 5% 5% 5% 10%;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        overflow-wrap: break-word;
+    }
+    div[data-testid="stMetric"] {
+        background-color: #262626;
+        border: 2px solid #505050;
+        padding: 5% 5% 5% 10%;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
+    div[data-testid="stMetricValue"] {
+        font-size: 28px;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+    div[data-testid="stMetricLabel"] {
+        font-size: 14px;
+        color: #BBBBBB;
+        font-weight: 500;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
+
 # Get BigQuery client from main app
 if "client" not in st.session_state:
     import os
@@ -23,8 +57,7 @@ if "client" not in st.session_state:
 
 client = st.session_state.client
 
-st.title("📊 Global Training Metrics")
-st.markdown("Overview of all your training sessions")
+st.title("📊 Zwift Training Statistics for: ")
 
 
 # Fetch available years from data
@@ -150,13 +183,13 @@ try:
 
     with col2:
         st.metric(
-            label="Total Distance", value=f"{training_metrics['total_distance_km'].iloc[0]:,.2f} km"
+            label="Total Distance", value=f"{training_metrics['total_distance_km'].iloc[0]:,.1f} km"
         )
 
     with col3:
         st.metric(
             label="Avg Distance per Session",
-            value=f"{training_metrics['avg_distance_km'].iloc[0]:.2f} km",
+            value=f"{training_metrics['avg_distance_km'].iloc[0]:.1f} km",
         )
 
     with col4:
@@ -167,7 +200,7 @@ try:
         seconds = int(avg_seconds % 60)
         st.metric(label="Avg Duration per Session", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
 
-    st.markdown("---")
+    # st.markdown("---")
 
     # Performance Metrics Section
     st.markdown("### 💪 Performance Metrics")
@@ -175,52 +208,60 @@ try:
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.markdown("#### ❤️ Heart Rate")
-        st.metric(label="Max", value=f"{int(performance_metrics['max_heart_rate'].iloc[0])} bpm")
-        st.metric(label="Average", value=f"{int(performance_metrics['avg_heart_rate'].iloc[0])} bpm")
+        st.metric(
+            label="Max Heart Rate ❤️", value=f"{int(performance_metrics['max_heart_rate'].iloc[0])} bpm"
+        )
+        st.metric(
+            label="Avg. Heart Rate ❤️",
+            value=f"{int(performance_metrics['avg_heart_rate'].iloc[0])} bpm",
+        )
 
     with col2:
-        st.markdown("#### ⚡ Power")
-        st.metric(label="Max", value=f"{int(performance_metrics['max_power'].iloc[0])} W")
-        st.metric(label="Average", value=f"{int(performance_metrics['avg_power'].iloc[0])} W")
+        st.metric(label="Max Power ⚡", value=f"{int(performance_metrics['max_power'].iloc[0])} W")
+        st.metric(label="Avg. Power⚡", value=f"{int(performance_metrics['avg_power'].iloc[0])} W")
 
     with col3:
-        st.markdown("#### 🔄 Cadence")
-        st.metric(label="Max", value=f"{int(performance_metrics['max_cadence'].iloc[0])} rpm")
-        st.metric(label="Average", value=f"{int(performance_metrics['avg_cadence'].iloc[0])} rpm")
+        # st.markdown("#### 🚴 Speed")
+        st.metric(label="Max Speed 🚴", value=f"{performance_metrics['max_speed'].iloc[0]:.1f} km/h")
+        st.metric(label="Avg. Speed 🚴", value=f"{performance_metrics['avg_speed'].iloc[0]:.1f} km/h")
 
     with col4:
-        st.markdown("#### 🚴 Speed")
-        st.metric(label="Max", value=f"{performance_metrics['max_speed'].iloc[0]:.1f} km/h")
-        st.metric(label="Average", value=f"{performance_metrics['avg_speed'].iloc[0]:.1f} km/h")
+        # st.markdown("#### 🔄 Cadence")
+        st.metric(label="Max Cadence 🔄", value=f"{int(performance_metrics['max_cadence'].iloc[0])} rpm")
+        st.metric(
+            label="Avg. Cadence 🔄", value=f"{int(performance_metrics['avg_cadence'].iloc[0])} rpm"
+        )
 
-    st.markdown("---")
+    # st.markdown("---")
 
     # Cardio Zone Distribution Section
-    st.markdown("### 🎯 Cardio Zone Distribution")
+    st.markdown("### 🎯 Time Spent in Cardio Zones")
 
     if not zone_distribution.empty:
-        # Create bar chart with custom colors
-        zone_colors = ['#92FC29', '#ADCE2D', '#C9A130', '#E47334', '#FF4537']
-        fig = px.bar(
-            zone_distribution,
-            x="zone_name",
-            y="percentage",
-            labels={"zone_name": "Zone", "percentage": "Time Percentage (%)"},
-            title="Time Distribution Across Cardio Zones",
-            color="zone_name",
-            color_discrete_sequence=zone_colors,
-        )
-        fig.update_layout(
-            xaxis_title="Cardio Zone", yaxis_title="Percentage of Time (%)", showlegend=False, height=400
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        # Create 5 individual zone cards with color-coded backgrounds
+        zone_colors = ["#92FC29", "#ADCE2D", "#C9A130", "#E47334", "#FF4537"]
+        zone_data = zone_distribution.to_dict("records")
 
-        # Display data table
-        st.markdown("#### Zone Details")
-        zone_display = zone_distribution.copy()
-        zone_display.columns = ["Zone", "Time (%)"]
-        st.dataframe(zone_display, use_container_width=True, hide_index=True)
+        col1, col2, col3, col4, col5 = st.columns(5)
+        cols = [col1, col2, col3, col4, col5]
+
+        for idx, (col, zone) in enumerate(zip(cols, zone_data)):
+            with col:
+                zone_color = zone_colors[idx]
+                st.markdown(
+                    f"""
+                    <div style="background-color: {zone_color};
+                                padding: 20px;
+                                border-radius: 10px;
+                                text-align: center;
+                                color: #000000;
+                                font-weight: bold;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">{zone['zone_name']}</div>
+                        <div style="font-size: 32px;">{zone['percentage']:.1f}%</div>
+                    </div>
+                """,
+                    unsafe_allow_html=True,
+                )
     else:
         st.info("No cardio zone data available for the selected period.")
 

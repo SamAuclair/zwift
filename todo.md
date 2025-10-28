@@ -21,12 +21,29 @@ The project showcases:
 ## Current Status
 
 **Phase**: Dashboard Development
-**Next Task**: Styling
+**Next Task**: Dashboard Enhancement & Polish
 
 ## Todo 📋
 
 ### 6. Styling
-- [ ] 
+- [x] Create card styling for all metrics on both pages (rectangular with rounded edges, matching nav bar theme)
+- [x] Round all distance units (km, km/h) to 1 decimal place in metrics and chart tooltips
+- [x] Global page modifications:
+  - [x] Replace zone bar chart with 5 individual zone cards (keeping green to red color scheme)
+  - [x] Remove zone details table
+- [x] Training session page modifications:
+  - [x] Replace "heart rate over time" chart with "cadence over time" chart
+  - [x] Remove "value" as y-axis title from "power and heart rate over time" chart
+  - [x] Make power line blue in the power/heart rate chart
+  - [x] Make speed line blue in the speed over time chart
+- [ ] Remove space before "Global Training Metrics" title. If possible, remove the header that contains the "Deploy" button
+- [ ] Center the text for all metrics in all cards. Center the value as well as the title.
+- [ ] Add a zwift logo somewhere. Create the folder where it would make sense to store the "zwift_logo.png" file and I'll provide it.
+- [ ] Add a "selected_year" variable to this line: st.title("📊 Zwift Training Statistics for: {selected_year}") to print the current value of the global page filter.
+- [ ] Change the text in the left nav bar. "global" -> "Overview". "training session" -> "Training Details".
+- [ ] Remove the first "dashboard" page. Make the default page: "Overview"
+
+*Commit: "style: implement card design, improve chart styling, modify texts, and enhance visual consistency"*
 
 
 ### 7. Dashboard Enhancement & Polish
@@ -127,3 +144,6 @@ The project showcases:
 - Implement query caching for frequently accessed aggregations
 - Consider materialized views for complex calculations
 - Use Streamlit's caching mechanisms (@st.cache_data)
+
+**Useful Commands**
+- poetry run streamlit run src/dashboard.py

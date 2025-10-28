@@ -13,6 +13,40 @@ from google.cloud import bigquery
 
 st.set_page_config(page_title="Training Session Details", page_icon="📈", layout="wide")
 
+# Custom CSS for card styling
+st.markdown(
+    """
+    <style>
+    div[data-testid="metric-container"] {
+        background-color: #262626;
+        border: 2px solid #505050;
+        padding: 5% 5% 5% 10%;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        overflow-wrap: break-word;
+    }
+    div[data-testid="stMetric"] {
+        background-color: #262626;
+        border: 2px solid #505050;
+        padding: 5% 5% 5% 10%;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
+    div[data-testid="stMetricValue"] {
+        font-size: 28px;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+    div[data-testid="stMetricLabel"] {
+        font-size: 14px;
+        color: #BBBBBB;
+        font-weight: 500;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
+
 # Get BigQuery client from main app
 if "client" not in st.session_state:
     import os
@@ -144,7 +178,7 @@ try:
         st.metric(label="Duration", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
 
     with col3:
-        st.metric(label="Distance", value=f"{session_info['distance_km'].iloc[0]:.2f} km")
+        st.metric(label="Distance", value=f"{session_info['distance_km'].iloc[0]:.1f} km")
 
     # Performance Metrics Section
     st.markdown("### 💪 Session Performance Metrics")
@@ -152,26 +186,24 @@ try:
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.markdown("#### ❤️ Heart Rate")
-        st.metric(label="Max", value=f"{int(session_metrics['max_heart_rate'].iloc[0])} bpm")
-        st.metric(label="Average", value=f"{int(session_metrics['avg_heart_rate'].iloc[0])} bpm")
+        st.metric(
+            label="Max Heart Rate ❤️", value=f"{int(session_metrics['max_heart_rate'].iloc[0])} bpm"
+        )
+        st.metric(
+            label="Avg. Heart Rate ❤️", value=f"{int(session_metrics['avg_heart_rate'].iloc[0])} bpm"
+        )
 
     with col2:
-        st.markdown("#### ⚡ Power")
-        st.metric(label="Max", value=f"{int(session_metrics['max_power'].iloc[0])} W")
-        st.metric(label="Average", value=f"{int(session_metrics['avg_power'].iloc[0])} W")
+        st.metric(label="Max Power ⚡", value=f"{int(session_metrics['max_power'].iloc[0])} W")
+        st.metric(label="Avg. Power ⚡", value=f"{int(session_metrics['avg_power'].iloc[0])} W")
 
     with col3:
-        st.markdown("#### 🔄 Cadence")
-        st.metric(label="Max", value=f"{int(session_metrics['max_cadence'].iloc[0])} rpm")
-        st.metric(label="Average", value=f"{int(session_metrics['avg_cadence'].iloc[0])} rpm")
+        st.metric(label="Max Speed 🚴", value=f"{session_metrics['max_speed'].iloc[0]:.1f} km/h")
+        st.metric(label="Avg. Speed 🚴", value=f"{session_metrics['avg_speed'].iloc[0]:.1f} km/h")
 
     with col4:
-        st.markdown("#### 🚴 Speed")
-        st.metric(label="Max", value=f"{session_metrics['max_speed'].iloc[0]:.1f} km/h")
-        st.metric(label="Average", value=f"{session_metrics['avg_speed'].iloc[0]:.1f} km/h")
-
-    # st.markdown("---")
+        st.metric(label="Max Cadence", value=f"{int(session_metrics['max_cadence'].iloc[0])} rpm")
+        st.metric(label="Avg. Cadence", value=f"{int(session_metrics['avg_cadence'].iloc[0])} rpm")
 
     # Time-Series Analysis Section
     st.markdown("### 📊 Time-Series Analysis")
@@ -180,13 +212,14 @@ try:
         # Create chart for Power and Heart Rate
         fig = go.Figure()
 
-        # Add Power trace
+        # Add Power trace (blue)
         fig.add_trace(
             go.Scatter(
                 x=timeseries_data["local_timestamp"],
                 y=timeseries_data["power"],
                 name="Power",
-                line=dict(color="#FF4537", width=2),
+                line=dict(color="#1f77b4", width=2),
+                hovertemplate="Power: %{y:.0f} W<extra></extra>",
             )
         )
 
@@ -197,14 +230,15 @@ try:
                 y=timeseries_data["heart_rate"],
                 name="Heart Rate",
                 line=dict(color="#E47334", width=2),
+                hovertemplate="Heart Rate: %{y:.0f} bpm<extra></extra>",
             )
         )
 
-        # Configure layout with single y-axis
+        # Configure layout with single y-axis (no title)
         fig.update_layout(
             title="Power and Heart Rate Over Time",
             xaxis=dict(title="Time"),
-            yaxis=dict(title="Value"),
+            yaxis=dict(title=""),
             hovermode="x unified",
             height=500,
             showlegend=True,
@@ -217,20 +251,20 @@ try:
         col1, col2 = st.columns(2)
 
         with col1:
-            # Heart rate over time
-            fig_hr = px.line(
+            # Cadence over time
+            fig_cadence = px.line(
                 timeseries_data,
                 x="local_timestamp",
-                y="heart_rate",
-                title="Heart Rate Over Time",
-                labels={"local_timestamp": "Time", "heart_rate": "Heart Rate (bpm)"},
+                y="cadence",
+                title="Cadence Over Time",
+                labels={"local_timestamp": "Time", "cadence": "Cadence (rpm)"},
             )
-            fig_hr.update_traces(line_color="#E47334")
-            fig_hr.update_layout(height=400)
-            st.plotly_chart(fig_hr, use_container_width=True)
+            fig_cadence.update_traces(line_color="#C9A130")
+            fig_cadence.update_layout(height=400)
+            st.plotly_chart(fig_cadence, use_container_width=True)
 
         with col2:
-            # Speed over time
+            # Speed over time (blue)
             fig_speed = px.line(
                 timeseries_data,
                 x="local_timestamp",
@@ -238,7 +272,9 @@ try:
                 title="Speed Over Time",
                 labels={"local_timestamp": "Time", "speed_kmh": "Speed (km/h)"},
             )
-            fig_speed.update_traces(line_color="#ADCE2D")
+            fig_speed.update_traces(
+                line_color="#1f77b4", hovertemplate="Speed: %{y:.1f} km/h<extra></extra>"
+            )
             fig_speed.update_layout(height=400)
             st.plotly_chart(fig_speed, use_container_width=True)
     else:
