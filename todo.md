@@ -21,27 +21,9 @@ The project showcases:
 ## Current Status
 
 **Phase**: Dashboard Development
-**Next Task**: Implement global metrics dashboard with training statistics and performance metrics
+**Next Task**: Implement training session detail dashboard (Page 2)
 
 ## Todo 📋
-
-### 4. Global Metrics Dashboard (Page 1)
-- [ ] Create main metrics page layout
-- [ ] Implement year filter (default: "all years")
-- [ ] Create score cards for global training metrics:
-  - [ ] Total training sessions (count distinct dates from augmented_data)
-  - [ ] Total distance (sum distance_km from training table)
-  - [ ] Average distance per session
-  - [ ] Average duration per session (HH:MM:SS format)
-- [ ] Create score cards for performance metrics (max/avg from augmented_data):
-  - [ ] Heart rate statistics
-  - [ ] Cadence statistics  
-  - [ ] Power statistics
-  - [ ] Speed statistics
-- [ ] Implement cardio zone time distribution analysis (using zone table)
-- [ ] Apply responsive grid layout for score cards
-
-*Commit: "feat: implement global metrics dashboard with training statistics and performance metrics"*
 
 ### 5. Training Session Detail Dashboard (Page 2)
 - [ ] Create training session detail page layout
@@ -70,17 +52,8 @@ The project showcases:
 
 *Commit: "feat: enhance dashboard with improved UX, error handling, and responsive design"*
 
-### 7. Deployment & Production Setup
-- [ ] Create Dockerfile for Streamlit application
-- [ ] Set up Google Cloud Run configuration
-- [ ] Configure environment variables and secrets management
-- [ ] Set up CI/CD pipeline for automated deployment
-- [ ] Configure custom domain and SSL (optional)
-- [ ] Implement monitoring and logging
 
-*Commit: "feat: deploy Streamlit dashboard to Google Cloud Run with CI/CD pipeline"*
-
-### 8. Documentation & Portfolio Integration
+### 7. Documentation & Portfolio Integration
 - [ ] Create comprehensive README.md
 - [ ] Document data architecture and pipeline
 - [ ] Add screenshots and demo video
@@ -89,33 +62,50 @@ The project showcases:
 
 *Commit: "docs: complete project documentation and portfolio integration"*
 
-### 9. Future Enhancements (Optional)
-- [ ] Add training plan recommendations
+### Nice to haves. Future Enhancements (Optional)
 - [ ] Implement comparative analysis with previous periods
-- [ ] Add goal tracking and progress monitoring
-- [ ] Integrate weather data correlation
-- [ ] Add social features for training buddies comparison
-- [ ] Implement machine learning models for performance prediction
 
-*Commit: "feat: implement advanced analytics and ML features for training insights"*
 
 ## Completed ✅
 
-### 1. Data Collection & Backup Infrastructure
-- [x] Backup .fit files to Google Drive
-- [x] Parse .fit files and extract relevant training data
-- [x] Upload processed data to BigQuery
+### 4. Global Metrics Dashboard (Page 1)
+- [x] Create main metrics page layout
+- [x] Implement year filter (default: "all years") - dynamically loads years from data
+- [x] Create score cards for global training metrics:
+  - [x] Total training sessions (count distinct dates from training table)
+  - [x] Total distance (sum distance_km from training table)
+  - [x] Average distance per session
+  - [x] Average duration per session (HH:MM:SS format)
+- [x] Create score cards for performance metrics (max/avg from augmented_data):
+  - [x] Heart rate statistics (max/avg)
+  - [x] Cadence statistics (max/avg)
+  - [x] Power statistics (max/avg)
+  - [x] Speed statistics (max/avg)
+- [x] Implement cardio zone time distribution analysis (using zone table with bar chart visualization)
+- [x] Apply responsive grid layout for score cards (4-column layout)
+- [x] Add data caching with @st.cache_data decorator (TTL: 10 minutes)
+- [x] Implement error handling for missing data
 
-### 2. Data Transformation & Modeling
-- [x] Build DBT models to create augmented tables in BigQuery
-- [x] Build DBT models to create aggregated tables in BigQuery
-- [x] Establish data architecture with training, augmented_data, and zone tables
+*Commit: "feat: implement global metrics dashboard with training statistics and performance metrics"*
 
 ### 3. Dashboard Infrastructure Setup
 - [x] Set up Streamlit application structure
 - [x] Configure BigQuery connection for Streamlit
 - [x] Implement dark theme configuration
 - [x] Set up multi-page navigation structure
+
+*Commit: "feat: initialize Streamlit dashboard with BigQuery connection and dark theme"*
+
+### 2. Data Transformation & Modeling
+- [x] Build DBT models to create augmented tables in BigQuery
+- [x] Build DBT models to create aggregated tables in BigQuery
+- [x] Establish data architecture with training, augmented_data, and zone tables
+
+### 1. Data Collection & Backup Infrastructure
+- [x] Backup .fit files to Google Drive
+- [x] Parse .fit files and extract relevant training data
+- [x] Upload processed data to BigQuery
+
 
 ## Technical Notes
 
