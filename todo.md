@@ -21,28 +21,15 @@ The project showcases:
 ## Current Status
 
 **Phase**: Dashboard Development
-**Next Task**: Implement training session detail dashboard (Page 2)
+**Next Task**: Styling
 
 ## Todo 📋
 
-### 5. Training Session Detail Dashboard (Page 2)
-- [ ] Create training session detail page layout
-- [ ] Implement date picker filter (only dates with existing training sessions)
-- [ ] Set default filter to latest training date
-- [ ] Create session-specific metric cards (max/avg from augmented_data):
-  - [ ] Session heart rate statistics
-  - [ ] Session cadence statistics
-  - [ ] Session power statistics
-  - [ ] Session speed statistics
-- [ ] Implement Plotly line chart for time-series data:
-  - [ ] Power curve over time
-  - [ ] Cadence curve over time
-  - [ ] Dual y-axis configuration
-  - [ ] Interactive zoom and hover features
+### 6. Styling
+- [ ] 
 
-*Commit: "feat: implement training session detail page with metrics and time-series visualization"*
 
-### 6. Dashboard Enhancement & Polish
+### 7. Dashboard Enhancement & Polish
 - [ ] Add loading states and error handling
 - [ ] Implement data refresh mechanisms
 - [ ] Add tooltips and help text for metrics
@@ -53,7 +40,7 @@ The project showcases:
 *Commit: "feat: enhance dashboard with improved UX, error handling, and responsive design"*
 
 
-### 7. Documentation & Portfolio Integration
+### 8. Documentation & Portfolio Integration
 - [ ] Create comprehensive README.md
 - [ ] Document data architecture and pipeline
 - [ ] Add screenshots and demo video
@@ -67,6 +54,24 @@ The project showcases:
 
 
 ## Completed ✅
+
+### 5. Training Session Detail Dashboard (Page 2)
+- [x] Create training session detail page layout
+- [x] Implement date picker filter (only dates with existing training sessions)
+- [x] Set default filter to latest training date
+- [x] Create session-specific metric cards (max/avg from augmented_data):
+  - [x] Session heart rate statistics
+  - [x] Session cadence statistics
+  - [x] Session power statistics
+  - [x] Session speed statistics
+- [x] Implement Plotly line chart for time-series data:
+  - [x] Power curve over time
+  - [x] Cadence curve over time
+  - [x] Dual y-axis configuration
+  - [x] Interactive zoom and hover features
+- [x] Additional time-series charts for heart rate and speed
+
+*Commit: "feat: implement training session detail page with metrics and time-series visualization"*
 
 ### 4. Global Metrics Dashboard (Page 1)
 - [x] Create main metrics page layout
