@@ -20,8 +20,8 @@ The project showcases:
 
 ## Current Status
 
-**Phase**: Dashboard Development
-**Next Task**: Dashboard Enhancement & Polish
+**Section**: 6. Styling
+**Next Task**: UX Enhancement & Polish
 
 ## Todo 📋
 
@@ -36,17 +36,29 @@ The project showcases:
   - [x] Remove "value" as y-axis title from "power and heart rate over time" chart
   - [x] Make power line blue in the power/heart rate chart
   - [x] Make speed line blue in the speed over time chart
-- [ ] Remove space before "Global Training Metrics" title. If possible, remove the header that contains the "Deploy" button
-- [ ] Center the text for all metrics in all cards. Center the value as well as the title.
-- [ ] Add a zwift logo somewhere. Create the folder where it would make sense to store the "zwift_logo.png" file and I'll provide it.
-- [ ] Add a "selected_year" variable to this line: st.title("📊 Zwift Training Statistics for: {selected_year}") to print the current value of the global page filter.
-- [ ] Change the text in the left nav bar. "global" -> "Overview". "training session" -> "Training Details".
-- [ ] Remove the first "dashboard" page. Make the default page: "Overview"
+- [x] Remove space before "Global Training Metrics" title. If possible, remove the header that contains the "Deploy" button
 
+- [x] Reduce the top margin for .stMainBlockContainer class.
+- [x] Center the text for all card title. After Last iteration they were still left aligned.
+- [x] Add a zwift logo at the top of the nav bar. the image is in "src/assets"
+- [x] Move the zwift logo to be above the page navigation element.
+- [x] Change the text in the left nav bar. "dashboard" -> "Overview". This change didn't work in previous iteration.
+- [x] Center the text of the title that is found inside each cards.
+- [x] On the second page, reduce the spacing between the "Training Details" title and the chart below by reducing the top margin of the chart element.
+- [x] On the second page, modify the chart to reduce spacing between the top of the top-most visual element and the top of the svg element produced by plotly. Try achieving this by adding/modifying a plotly property in "02_Training_Details.py" (line 202-235). Fetch the plotly doc if unsure how to proceed.
+- [x] Reduce the padding-top and padding-bottom of the stMainBlockContainer to 10.
+- [x] Set a max width for the cards. They get to large when given the chance.
+- [x] remove the tool icons that hover in the top right corner for the plotly chart. This can be achieved by adding/modifying a plotly property in "02_Training_Details.py". Fetch the plotly doc if unsure how to proceed.
+- [ ] center the title in the card and remove some padding-top
+
+  
 *Commit: "style: implement card design, improve chart styling, modify texts, and enhance visual consistency"*
 
-
-### 7. Dashboard Enhancement & Polish
+### 7. UX Enhancement & Polish
+- [x] Add a "selected_year" variable to this line: st.title("📊 Zwift Training Statistics for: {selected_year}") to print the current value of the global page filter.
+- [ ] Add the selected_date at the end of the title of page 2. (e.g. Training Details (2025-10-23))
+- [ ] Add Cardio zones for each training.
+- [ ] Remove the first "dashboard" page. Make the default page: "Overview"
 - [ ] Add loading states and error handling
 - [ ] Implement data refresh mechanisms
 - [ ] Add tooltips and help text for metrics
@@ -56,8 +68,13 @@ The project showcases:
 
 *Commit: "feat: enhance dashboard with improved UX, error handling, and responsive design"*
 
+### 8. Styling - Polishing Colors
+- [] 
 
-### 8. Documentation & Portfolio Integration
+*Commit: "style: Change design colors"*
+
+
+### 9. Documentation & Portfolio Integration
 - [ ] Create comprehensive README.md
 - [ ] Document data architecture and pipeline
 - [ ] Add screenshots and demo video

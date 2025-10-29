@@ -1,7 +1,10 @@
 """
-Global Metrics Dashboard - Page 1
+Zwift Training Overview Dashboard - Main Page
 Displays aggregate statistics across all training sessions
 """
+
+import os
+from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
@@ -9,55 +12,108 @@ import plotly.graph_objects as go
 import streamlit as st
 from google.cloud import bigquery
 
-st.set_page_config(page_title="Global Metrics", page_icon="📊", layout="wide")
+# Page configuration
+st.set_page_config(
+    page_title="Zwift Dashboard",
+    page_icon="🚴",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 # Custom CSS for card styling
 st.markdown(
     """
     <style>
+    /* Hide the deploy button and reduce top padding */
+    header[data-testid="stHeader"] {
+        display: none;
+    }
+    .block-container {
+        padding-top: 2rem;
+    }
+    .stMainBlockContainer {
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+
     div[data-testid="metric-container"] {
         background-color: #262626;
         border: 2px solid #505050;
-        padding: 5% 5% 5% 10%;
+        padding: 5%;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.6);
         overflow-wrap: break-word;
+        text-align: center;
+        max-width: 300px;
+        margin: 0 auto;
     }
     div[data-testid="stMetric"] {
         background-color: #262626;
         border: 2px solid #505050;
-        padding: 5% 5% 5% 10%;
+        padding: 5%;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        text-align: center;
+        max-width: 300px;
+        margin: 0 auto;
     }
     div[data-testid="stMetricValue"] {
         font-size: 28px;
         font-weight: bold;
         color: #FFFFFF;
+        text-align: center;
     }
     div[data-testid="stMetricLabel"] {
         font-size: 14px;
         color: #BBBBBB;
         font-weight: 500;
     }
+    /* Keep section headers left-aligned */
+    h3 {
+        text-align: left;
+    }
+    /* Position logo at the top of sidebar */
+    [data-testid="stSidebar"] > div:first-child {
+        padding-top: 1rem;
+    }
+    section[data-testid="stSidebar"] [data-testid="stImage"] {
+        margin-bottom: 2rem;
+    }
     </style>
 """,
     unsafe_allow_html=True,
 )
 
-# Get BigQuery client from main app
-if "client" not in st.session_state:
-    import os
-    from pathlib import Path
 
+# Initialize BigQuery client
+@st.cache_resource
+def get_bigquery_client():
+    """Initialize and cache BigQuery client with service account credentials"""
+    # Look for credentials in project root
     project_root = Path(__file__).parent.parent.parent
     credentials_path = project_root / "zwift-data-loader-key.json"
+
+    if not credentials_path.exists():
+        st.error(f"BigQuery credentials not found at: {credentials_path}")
+        st.stop()
+
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(credentials_path)
-    st.session_state.client = bigquery.Client()
 
-client = st.session_state.client
+    try:
+        client = bigquery.Client()
+        return client
+    except Exception as e:
+        st.error(f"Failed to initialize BigQuery client: {e}")
+        st.stop()
 
-st.title("📊 Zwift Training Statistics for: ")
+
+# Initialize client
+client = get_bigquery_client()
+
+# Add Zwift logo to sidebar
+logo_path = Path(__file__).parent.parent / "assets" / "zwift_logo.png"
+if logo_path.exists():
+    st.sidebar.image(str(logo_path), use_container_width=True)
 
 
 # Fetch available years from data
@@ -77,6 +133,9 @@ def get_available_years():
 st.sidebar.header("Filters")
 available_years = get_available_years()
 year_filter = st.sidebar.selectbox("Year", options=available_years, index=0)
+
+# Display title with selected year
+st.title(f"Zwift Training Statistics for: {year_filter}")
 
 # Build year filter condition for queries
 year_condition = ""
@@ -172,8 +231,6 @@ try:
     performance_metrics = get_performance_metrics(year_condition)
     zone_distribution = get_zone_distribution(year_condition)
 
-    # Training Statistics Section
-    st.markdown("### 📈 Training Statistics")
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
@@ -200,42 +257,34 @@ try:
         seconds = int(avg_seconds % 60)
         st.metric(label="Avg Duration per Session", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
 
-    # st.markdown("---")
-
-    # Performance Metrics Section
-    st.markdown("### 💪 Performance Metrics")
-
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.metric(
-            label="Max Heart Rate ❤️", value=f"{int(performance_metrics['max_heart_rate'].iloc[0])} bpm"
-        )
-        st.metric(
             label="Avg. Heart Rate ❤️",
             value=f"{int(performance_metrics['avg_heart_rate'].iloc[0])} bpm",
         )
+        st.metric(
+            label="Max Hearth Rate ❤️", value=f"{int(performance_metrics['max_heart_rate'].iloc[0])} bpm"
+        )
 
     with col2:
-        st.metric(label="Max Power ⚡", value=f"{int(performance_metrics['max_power'].iloc[0])} W")
         st.metric(label="Avg. Power⚡", value=f"{int(performance_metrics['avg_power'].iloc[0])} W")
+        st.metric(label="Max Power ⚡", value=f"{int(performance_metrics['max_power'].iloc[0])} W")
 
     with col3:
-        # st.markdown("#### 🚴 Speed")
-        st.metric(label="Max Speed 🚴", value=f"{performance_metrics['max_speed'].iloc[0]:.1f} km/h")
         st.metric(label="Avg. Speed 🚴", value=f"{performance_metrics['avg_speed'].iloc[0]:.1f} km/h")
+        st.metric(label="Max Speed 🚴", value=f"{performance_metrics['max_speed'].iloc[0]:.1f} km/h")
 
     with col4:
-        # st.markdown("#### 🔄 Cadence")
-        st.metric(label="Max Cadence 🔄", value=f"{int(performance_metrics['max_cadence'].iloc[0])} rpm")
         st.metric(
             label="Avg. Cadence 🔄", value=f"{int(performance_metrics['avg_cadence'].iloc[0])} rpm"
         )
-
-    # st.markdown("---")
+        st.metric(label="Max Cadence 🔄", value=f"{int(performance_metrics['max_cadence'].iloc[0])} rpm")
 
     # Cardio Zone Distribution Section
-    st.markdown("### 🎯 Time Spent in Cardio Zones")
+    st.markdown("---")
+    st.markdown("### Time Spent in Cardio Zones")
 
     if not zone_distribution.empty:
         # Create 5 individual zone cards with color-coded backgrounds

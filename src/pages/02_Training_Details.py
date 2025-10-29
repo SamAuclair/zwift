@@ -11,36 +11,70 @@ import plotly.graph_objects as go
 import streamlit as st
 from google.cloud import bigquery
 
-st.set_page_config(page_title="Training Session Details", page_icon="📈", layout="wide")
+st.set_page_config(page_title="Zwift Dashboard", page_icon="🚴", layout="wide")
 
 # Custom CSS for card styling
 st.markdown(
     """
     <style>
+    /* Hide the deploy button and reduce top padding */
+    header[data-testid="stHeader"] {
+        display: none;
+    }
+    .block-container {
+        padding-top: 2rem;
+    }
+    .stMainBlockContainer {
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+
     div[data-testid="metric-container"] {
         background-color: #262626;
         border: 2px solid #505050;
-        padding: 5% 5% 5% 10%;
+        padding: 5%;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.6);
         overflow-wrap: break-word;
+        text-align: center;
+        max-width: 300px;
+        margin: 0 auto;
     }
     div[data-testid="stMetric"] {
         background-color: #262626;
         border: 2px solid #505050;
-        padding: 5% 5% 5% 10%;
+        padding: 5%;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        text-align: center;
+        max-width: 300px;
+        margin: 0 auto;
     }
     div[data-testid="stMetricValue"] {
         font-size: 28px;
         font-weight: bold;
         color: #FFFFFF;
+        text-align: center;
     }
     div[data-testid="stMetricLabel"] {
         font-size: 14px;
         color: #BBBBBB;
         font-weight: 500;
+    }
+    /* Keep section headers left-aligned */
+    h3 {
+        text-align: left;
+    }
+    /* Position logo at the top of sidebar */
+    [data-testid="stSidebar"] > div:first-child {
+        padding-top: 1rem;
+    }
+    section[data-testid="stSidebar"] [data-testid="stImage"] {
+        margin-bottom: 2rem;
+    }
+    /* Reduce spacing between title and chart */
+    div[data-testid="stPlotlyChart"] {
+        margin-top: -1rem;
     }
     </style>
 """,
@@ -59,7 +93,14 @@ if "client" not in st.session_state:
 
 client = st.session_state.client
 
-st.title("📈 Training Session Details")
+# Add Zwift logo to sidebar
+from pathlib import Path
+
+logo_path = Path(__file__).parent.parent / "assets" / "zwift_logo.png"
+if logo_path.exists():
+    st.sidebar.image(str(logo_path), use_container_width=True)
+
+st.title("Training Details")
 
 
 # Fetch available training dates
@@ -161,53 +202,6 @@ try:
         st.error(f"No data available for {selected_date}")
         st.stop()
 
-    # Display session summary
-    st.markdown(f"### 📅 Session Overview")
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric(label="Date", value=f"{selected_date}")
-
-    with col2:
-        # Convert seconds to HH:MM:SS
-        duration_seconds = session_info["duration"].iloc[0]
-        hours = int(duration_seconds // 3600)
-        minutes = int((duration_seconds % 3600) // 60)
-        seconds = int(duration_seconds % 60)
-        st.metric(label="Duration", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
-
-    with col3:
-        st.metric(label="Distance", value=f"{session_info['distance_km'].iloc[0]:.1f} km")
-
-    # Performance Metrics Section
-    st.markdown("### 💪 Session Performance Metrics")
-
-    col1, col2, col3, col4 = st.columns(4)
-
-    with col1:
-        st.metric(
-            label="Max Heart Rate ❤️", value=f"{int(session_metrics['max_heart_rate'].iloc[0])} bpm"
-        )
-        st.metric(
-            label="Avg. Heart Rate ❤️", value=f"{int(session_metrics['avg_heart_rate'].iloc[0])} bpm"
-        )
-
-    with col2:
-        st.metric(label="Max Power ⚡", value=f"{int(session_metrics['max_power'].iloc[0])} W")
-        st.metric(label="Avg. Power ⚡", value=f"{int(session_metrics['avg_power'].iloc[0])} W")
-
-    with col3:
-        st.metric(label="Max Speed 🚴", value=f"{session_metrics['max_speed'].iloc[0]:.1f} km/h")
-        st.metric(label="Avg. Speed 🚴", value=f"{session_metrics['avg_speed'].iloc[0]:.1f} km/h")
-
-    with col4:
-        st.metric(label="Max Cadence", value=f"{int(session_metrics['max_cadence'].iloc[0])} rpm")
-        st.metric(label="Avg. Cadence", value=f"{int(session_metrics['avg_cadence'].iloc[0])} rpm")
-
-    # Time-Series Analysis Section
-    st.markdown("### 📊 Time-Series Analysis")
-
     if not timeseries_data.empty:
         # Create chart for Power and Heart Rate
         fig = go.Figure()
@@ -236,49 +230,54 @@ try:
 
         # Configure layout with single y-axis (no title)
         fig.update_layout(
-            title="Power and Heart Rate Over Time",
-            xaxis=dict(title="Time"),
             yaxis=dict(title=""),
             hovermode="x unified",
-            height=500,
+            height=350,
             showlegend=True,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+            margin=dict(t=20, b=10),
         )
 
-        st.plotly_chart(fig, use_container_width=True)
-
-        # Additional charts
-        col1, col2 = st.columns(2)
-
-        with col1:
-            # Cadence over time
-            fig_cadence = px.line(
-                timeseries_data,
-                x="local_timestamp",
-                y="cadence",
-                title="Cadence Over Time",
-                labels={"local_timestamp": "Time", "cadence": "Cadence (rpm)"},
-            )
-            fig_cadence.update_traces(line_color="#C9A130")
-            fig_cadence.update_layout(height=400)
-            st.plotly_chart(fig_cadence, use_container_width=True)
-
-        with col2:
-            # Speed over time (blue)
-            fig_speed = px.line(
-                timeseries_data,
-                x="local_timestamp",
-                y="speed_kmh",
-                title="Speed Over Time",
-                labels={"local_timestamp": "Time", "speed_kmh": "Speed (km/h)"},
-            )
-            fig_speed.update_traces(
-                line_color="#1f77b4", hovertemplate="Speed: %{y:.1f} km/h<extra></extra>"
-            )
-            fig_speed.update_layout(height=400)
-            st.plotly_chart(fig_speed, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
     else:
         st.info("No time-series data available for this session.")
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric(label="Distance", value=f"{session_info['distance_km'].iloc[0]:.1f} km")
+
+    with col2:
+        # Convert seconds to HH:MM:SS
+        duration_seconds = session_info["duration"].iloc[0]
+        hours = int(duration_seconds // 3600)
+        minutes = int((duration_seconds % 3600) // 60)
+        seconds = int(duration_seconds % 60)
+        st.metric(label="Duration", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric(
+            label="Avg. Heart Rate ❤️", value=f"{int(session_metrics['avg_heart_rate'].iloc[0])} bpm"
+        )
+        st.metric(
+            label="Max Heart Rate ❤️", value=f"{int(session_metrics['max_heart_rate'].iloc[0])} bpm"
+        )
+
+    with col2:
+        st.metric(label="Avg. Power ⚡", value=f"{int(session_metrics['avg_power'].iloc[0])} W")
+        st.metric(label="Max Power ⚡", value=f"{int(session_metrics['max_power'].iloc[0])} W")
+
+    with col3:
+        st.metric(label="Avg. Speed 🚴", value=f"{session_metrics['avg_speed'].iloc[0]:.1f} km/h")
+        st.metric(label="Max Speed 🚴", value=f"{session_metrics['max_speed'].iloc[0]:.1f} km/h")
+
+    with col4:
+        st.metric(label="Avg. Cadence 🔄", value=f"{int(session_metrics['avg_cadence'].iloc[0])} rpm")
+        st.metric(label="Max Cadence 🔄", value=f"{int(session_metrics['max_cadence'].iloc[0])} rpm")
+
+    st.markdown("---")
 
 except Exception as e:
     st.error(f"Error loading session details: {e}")
