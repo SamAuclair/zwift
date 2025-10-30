@@ -111,8 +111,6 @@ logo_path = Path(__file__).parent.parent / "assets" / "zwift_logo.png"
 if logo_path.exists():
     st.sidebar.image(str(logo_path), use_container_width=True)
 
-st.title("Training Details")
-
 
 # Fetch available training dates
 @st.cache_data(ttl=600)
@@ -184,6 +182,45 @@ def get_session_info(selected_date):
     return client.query(query).to_dataframe()
 
 
+# Fetch cardio zone distribution for specific date
+@st.cache_data(ttl=600)
+def get_zone_distribution(selected_date):
+    """Get time distribution across cardio zones for a specific date"""
+    query = f"""
+    WITH zone_totals AS (
+        SELECT
+            time_zone_1 as total_zone_1,
+            time_zone_2 as total_zone_2,
+            time_zone_3 as total_zone_3,
+            time_zone_4 as total_zone_4,
+            time_zone_5 as total_zone_5
+        FROM `zwift_data.zone`
+        WHERE date = '{selected_date}'
+    ),
+    total_time AS (
+        SELECT
+            total_zone_1 + total_zone_2 + total_zone_3 + total_zone_4 + total_zone_5 as total
+        FROM zone_totals
+    )
+    SELECT 'Zone 1' as zone_name, ROUND((zone_totals.total_zone_1 / total_time.total) * 100, 2) as percentage
+    FROM zone_totals, total_time
+    UNION ALL
+    SELECT 'Zone 2' as zone_name, ROUND((zone_totals.total_zone_2 / total_time.total) * 100, 2) as percentage
+    FROM zone_totals, total_time
+    UNION ALL
+    SELECT 'Zone 3' as zone_name, ROUND((zone_totals.total_zone_3 / total_time.total) * 100, 2) as percentage
+    FROM zone_totals, total_time
+    UNION ALL
+    SELECT 'Zone 4' as zone_name, ROUND((zone_totals.total_zone_4 / total_time.total) * 100, 2) as percentage
+    FROM zone_totals, total_time
+    UNION ALL
+    SELECT 'Zone 5' as zone_name, ROUND((zone_totals.total_zone_5 / total_time.total) * 100, 2) as percentage
+    FROM zone_totals, total_time
+    ORDER BY zone_name
+    """
+    return client.query(query).to_dataframe()
+
+
 # Date picker filter
 st.sidebar.header("Filters")
 
@@ -204,10 +241,14 @@ try:
     # Convert selected string back to date object
     selected_date = datetime.strptime(selected_date_str, "%Y-%m-%d").date()
 
+    # Display title with selected date
+    st.title(f"Training Details ({selected_date_str})")
+
     # Fetch data for selected date
     session_info = get_session_info(selected_date)
     session_metrics = get_session_metrics(selected_date)
     timeseries_data = get_timeseries_data(selected_date)
+    zone_distribution = get_zone_distribution(selected_date)
 
     if session_info.empty or session_metrics.empty:
         st.error(f"No data available for {selected_date}")
@@ -288,7 +329,43 @@ try:
         st.metric(label="Avg. Cadence 🔄", value=f"{int(session_metrics['avg_cadence'].iloc[0])} rpm")
         st.metric(label="Max Cadence 🔄", value=f"{int(session_metrics['max_cadence'].iloc[0])} rpm")
 
+    # Cardio Zone Distribution Section
     st.markdown("---")
+    st.markdown("### Time Spent in Cardio Zones")
+
+    if not zone_distribution.empty:
+        # Create 5 individual zone cards with color-coded backgrounds
+        zone_colors = ["#92FC29", "#ADCE2D", "#C9A130", "#E47334", "#FF4537"]
+        zone_data = zone_distribution.to_dict("records")
+
+        col1, col2, col3, col4, col5 = st.columns(5)
+        cols = [col1, col2, col3, col4, col5]
+
+        for idx, (col, zone) in enumerate(zip(cols, zone_data)):
+            with col:
+                zone_color = zone_colors[idx]
+                st.markdown(
+                    f"""
+                    <div style="background-color: {zone_color};
+                                border-radius: 10px;
+                                text-align: center;
+                                color: #000000;
+                                font-weight: bold;
+                                max-height: 100px;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;">
+                        <div style="font-size: 24px; margin-top: 5px;">{zone['zone_name']}</div>
+                        <div style="font-size: 32px; margin-bottom: 5px;">{zone['percentage']:.1f}%</div>
+                    </div>
+                """,
+                    unsafe_allow_html=True,
+                )
+    else:
+        st.info("No cardio zone data available for the selected date.")
+
+    # Add some bottom spacing
+    st.markdown("<br>", unsafe_allow_html=True)
 
 except Exception as e:
     st.error(f"Error loading session details: {e}")

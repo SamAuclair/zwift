@@ -309,13 +309,16 @@ try:
                 st.markdown(
                     f"""
                     <div style="background-color: {zone_color};
-                                padding: 20px;
                                 border-radius: 10px;
                                 text-align: center;
                                 color: #000000;
-                                font-weight: bold;">
-                        <div style="font-size: 24px; margin-bottom: 10px;">{zone['zone_name']}</div>
-                        <div style="font-size: 32px;">{zone['percentage']:.1f}%</div>
+                                font-weight: bold;
+                                max-height: 100px;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;">
+                        <div style="font-size: 24px; margin-top: 5px;">{zone['zone_name']}</div>
+                        <div style="font-size: 32px; margin-bottom: 5px;">{zone['percentage']:.1f}%</div>
                     </div>
                 """,
                     unsafe_allow_html=True,

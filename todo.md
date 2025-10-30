@@ -25,6 +25,39 @@ The project showcases:
 
 ## Todo 📋
 
+### 7. UX Enhancement & Polish
+- [x] Add a "selected_year" variable to this line: st.title("📊 Zwift Training Statistics for: {selected_year}") to print the current value of the global page filter.
+- [x] Add the selected_date at the end of the title of page 2. (e.g. Training Details (2025-10-23))
+- [x] Add Cardio zones in the "Training Details" page. This should be exactly like the 5 zone cards in "Overview" with the exception that it is filter for a the selected date.
+- [ ] Remove the first "dashboard" page. Make the default page: "Overview" without changing the name to "dashboard".
+- [ ] Add tooltips and help text for metrics
+- [ ] Add loading states
+- [ ] Implement data refresh mechanisms
+- [ ] Optimize query performance
+- [ ] Add data quality indicators
+- [ ] Implement responsive design for mobile devices
+
+*Commit: "feat: enhance dashboard with improved UX, error handling, and responsive design"*
+
+### 8. Styling - Polishing Colors
+- [] 
+
+*Commit: "style: Change design colors"*
+
+### 9. Documentation & Portfolio Integration
+- [ ] Create comprehensive README.md
+- [ ] Document data architecture and pipeline
+- [ ] Add screenshots and demo video
+- [ ] Write technical blog post about the project
+- [ ] Update portfolio website with project showcase
+
+*Commit: "docs: complete project documentation and portfolio integration"*
+
+### Nice to haves. Future Enhancements (Optional)
+- [ ] Implement comparative analysis with previous periods
+
+## Completed ✅
+
 ### 6. Styling
 - [x] Create card styling for all metrics on both pages (rectangular with rounded edges, matching nav bar theme)
 - [x] Round all distance units (km, km/h) to 1 decimal place in metrics and chart tooltips
@@ -49,44 +82,9 @@ The project showcases:
 - [x] Set a max width for the cards. They get to large when given the chance.
 - [x] remove the tool icons that hover in the top right corner for the plotly chart. This can be achieved by adding/modifying a plotly property in "02_Training_Details.py". Fetch the plotly doc if unsure how to proceed.
 - [x] Center the title in the card and remove some padding-top. Careful, I am not talking about the h3 element that has a h3 "text-align: left" property. leave that one as is. I want the title such as "Total Training Sessions" and "Max Heart Rate ❤️" to be centered.
-- [x] Increase the font size of the title in the card. Modifying the "div[data-testid="stMetricLabel"]" selector doesn't work. There is a font-size property inherited by st-emotion-cache
+- [x] Increase the font size of the title in the card.
 
 *Commit: "style: implement card design, improve chart styling, modify texts, and enhance visual consistency"*
-
-### 7. UX Enhancement & Polish
-- [x] Add a "selected_year" variable to this line: st.title("📊 Zwift Training Statistics for: {selected_year}") to print the current value of the global page filter.
-- [ ] Add the selected_date at the end of the title of page 2. (e.g. Training Details (2025-10-23))
-- [ ] Add Cardio zones for each training.
-- [ ] Remove the first "dashboard" page. Make the default page: "Overview"
-- [ ] Add loading states and error handling
-- [ ] Implement data refresh mechanisms
-- [ ] Add tooltips and help text for metrics
-- [ ] Optimize query performance
-- [ ] Add data quality indicators
-- [ ] Implement responsive design for mobile devices
-
-*Commit: "feat: enhance dashboard with improved UX, error handling, and responsive design"*
-
-### 8. Styling - Polishing Colors
-- [] 
-
-*Commit: "style: Change design colors"*
-
-
-### 9. Documentation & Portfolio Integration
-- [ ] Create comprehensive README.md
-- [ ] Document data architecture and pipeline
-- [ ] Add screenshots and demo video
-- [ ] Write technical blog post about the project
-- [ ] Update portfolio website with project showcase
-
-*Commit: "docs: complete project documentation and portfolio integration"*
-
-### Nice to haves. Future Enhancements (Optional)
-- [ ] Implement comparative analysis with previous periods
-
-
-## Completed ✅
 
 ### 5. Training Session Detail Dashboard (Page 2)
 - [x] Create training session detail page layout
