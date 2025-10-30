@@ -200,7 +200,7 @@ def get_performance_metrics(year_cond):
 def get_zone_distribution(year_cond):
     """Get time distribution across cardio zones"""
     query = f"""
-    WITH zone_totals AS (
+    WITH zone_time_totals AS (
         SELECT
             SUM(time_zone_1) as total_zone_1,
             SUM(time_zone_2) as total_zone_2,
@@ -210,26 +210,30 @@ def get_zone_distribution(year_cond):
         FROM `zwift_data.zone`
         {year_cond}
     )
-    ,
-    total_time AS (
-        SELECT
-            total_zone_1 + total_zone_2 + total_zone_3 + total_zone_4 + total_zone_5 as total
-        FROM zone_totals
-    )
-    SELECT 'Zone 1' as zone_name, ROUND((zone_totals.total_zone_1 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 1' as zone_name,
+        ROUND((total_zone_1 / (total_zone_1 + total_zone_2 + total_zone_3 + total_zone_4 + total_zone_5)) * 100, 2) as percentage
+    FROM zone_time_totals
     UNION ALL
-    SELECT 'Zone 2' as zone_name, ROUND((zone_totals.total_zone_2 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 2' as zone_name,
+        ROUND((total_zone_2 / (total_zone_1 + total_zone_2 + total_zone_3 + total_zone_4 + total_zone_5)) * 100, 2) as percentage
+    FROM zone_time_totals
     UNION ALL
-    SELECT 'Zone 3' as zone_name, ROUND((zone_totals.total_zone_3 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 3' as zone_name,
+        ROUND((total_zone_3 / (total_zone_1 + total_zone_2 + total_zone_3 + total_zone_4 + total_zone_5)) * 100, 2) as percentage
+    FROM zone_time_totals
     UNION ALL
-    SELECT 'Zone 4' as zone_name, ROUND((zone_totals.total_zone_4 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 4' as zone_name,
+        ROUND((total_zone_4 / (total_zone_1 + total_zone_2 + total_zone_3 + total_zone_4 + total_zone_5)) * 100, 2) as percentage
+    FROM zone_time_totals
     UNION ALL
-    SELECT 'Zone 5' as zone_name, ROUND((zone_totals.total_zone_5 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 5' as zone_name,
+        ROUND((total_zone_5 / (total_zone_1 + total_zone_2 + total_zone_3 + total_zone_4 + total_zone_5)) * 100, 2) as percentage
+    FROM zone_time_totals
     ORDER BY zone_name
     """
     return client.query(query).to_dataframe()

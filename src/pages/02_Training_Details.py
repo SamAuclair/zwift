@@ -125,21 +125,23 @@ def get_available_dates():
     return df["date"].tolist()
 
 
-# Fetch session metrics
+# Fetch session metrics from training table (already pre-aggregated)
 @st.cache_data(ttl=600)
 def get_session_metrics(selected_date):
     """Get detailed metrics for a specific training session"""
     query = f"""
     SELECT
-        ROUND(MAX(heart_rate), 0) as max_heart_rate,
-        ROUND(AVG(heart_rate), 0) as avg_heart_rate,
-        ROUND(MAX(cadence), 0) as max_cadence,
-        ROUND(AVG(cadence), 0) as avg_cadence,
-        ROUND(MAX(power), 0) as max_power,
-        ROUND(AVG(power), 0) as avg_power,
-        ROUND(MAX(speed_kmh), 1) as max_speed,
-        ROUND(AVG(speed_kmh), 1) as avg_speed
-    FROM `zwift_data.augmented_data`
+        distance_km,
+        duration,
+        ROUND(max_heart_rate, 0) as max_heart_rate,
+        ROUND(avg_heart_rate, 0) as avg_heart_rate,
+        ROUND(max_cadence, 0) as max_cadence,
+        ROUND(avg_cadence, 0) as avg_cadence,
+        ROUND(max_power, 0) as max_power,
+        ROUND(avg_power, 0) as avg_power,
+        ROUND(max_speed_kmh, 1) as max_speed,
+        ROUND(avg_speed_kmh, 1) as avg_speed
+    FROM `zwift_data.training`
     WHERE date = '{selected_date}'
     """
     return client.query(query).to_dataframe()
@@ -164,58 +166,40 @@ def get_timeseries_data(selected_date):
     return client.query(query).to_dataframe()
 
 
-# Fetch training session info
-@st.cache_data(ttl=600)
-def get_session_info(selected_date):
-    """Get basic session information from training table"""
-    query = f"""
-    SELECT
-        distance_km,
-        duration,
-        avg_speed_kmh,
-        avg_cadence,
-        avg_power,
-        avg_heart_rate
-    FROM `zwift_data.training`
-    WHERE date = '{selected_date}'
-    """
-    return client.query(query).to_dataframe()
-
-
 # Fetch cardio zone distribution for specific date
 @st.cache_data(ttl=600)
 def get_zone_distribution(selected_date):
     """Get time distribution across cardio zones for a specific date"""
     query = f"""
-    WITH zone_totals AS (
-        SELECT
-            time_zone_1 as total_zone_1,
-            time_zone_2 as total_zone_2,
-            time_zone_3 as total_zone_3,
-            time_zone_4 as total_zone_4,
-            time_zone_5 as total_zone_5
-        FROM `zwift_data.zone`
-        WHERE date = '{selected_date}'
-    ),
-    total_time AS (
-        SELECT
-            total_zone_1 + total_zone_2 + total_zone_3 + total_zone_4 + total_zone_5 as total
-        FROM zone_totals
-    )
-    SELECT 'Zone 1' as zone_name, ROUND((zone_totals.total_zone_1 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 1' as zone_name,
+        ROUND(percentage_time_zone_1, 2) as percentage
+    FROM `zwift_data.zone`
+    WHERE date = '{selected_date}'
     UNION ALL
-    SELECT 'Zone 2' as zone_name, ROUND((zone_totals.total_zone_2 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 2' as zone_name,
+        ROUND(percentage_time_zone_2, 2) as percentage
+    FROM `zwift_data.zone`
+    WHERE date = '{selected_date}'
     UNION ALL
-    SELECT 'Zone 3' as zone_name, ROUND((zone_totals.total_zone_3 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 3' as zone_name,
+        ROUND(percentage_time_zone_3, 2) as percentage
+    FROM `zwift_data.zone`
+    WHERE date = '{selected_date}'
     UNION ALL
-    SELECT 'Zone 4' as zone_name, ROUND((zone_totals.total_zone_4 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 4' as zone_name,
+        ROUND(percentage_time_zone_4, 2) as percentage
+    FROM `zwift_data.zone`
+    WHERE date = '{selected_date}'
     UNION ALL
-    SELECT 'Zone 5' as zone_name, ROUND((zone_totals.total_zone_5 / total_time.total) * 100, 2) as percentage
-    FROM zone_totals, total_time
+    SELECT
+        'Zone 5' as zone_name,
+        ROUND(percentage_time_zone_5, 2) as percentage
+    FROM `zwift_data.zone`
+    WHERE date = '{selected_date}'
     ORDER BY zone_name
     """
     return client.query(query).to_dataframe()
@@ -247,12 +231,11 @@ try:
 
     # Fetch data for selected date
     with st.spinner("Loading session details..."):
-        session_info = get_session_info(selected_date)
         session_metrics = get_session_metrics(selected_date)
         timeseries_data = get_timeseries_data(selected_date)
         zone_distribution = get_zone_distribution(selected_date)
 
-    if session_info.empty or session_metrics.empty:
+    if session_metrics.empty:
         st.error(f"No data available for {selected_date}")
         st.stop()
 
@@ -299,11 +282,11 @@ try:
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.metric(label="Distance", value=f"{session_info['distance_km'].iloc[0]:.1f} km")
+        st.metric(label="Distance", value=f"{session_metrics['distance_km'].iloc[0]:.1f} km")
 
     with col2:
         # Convert seconds to HH:MM:SS
-        duration_seconds = session_info["duration"].iloc[0]
+        duration_seconds = session_metrics["duration"].iloc[0]
         hours = int(duration_seconds // 3600)
         minutes = int((duration_seconds % 3600) // 60)
         seconds = int(duration_seconds % 60)

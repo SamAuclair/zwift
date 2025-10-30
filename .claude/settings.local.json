@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(del \"C:\\projects\\Zwift\\src\\pages\\01_Overview.py\")"
+      "Bash(del \"C:\\projects\\Zwift\\src\\pages\\01_Overview.py\")",
+      "Bash(poetry run:*)"
     ],
     "deny": [],
     "ask": []

@@ -31,10 +31,10 @@ The project showcases:
 - [x] Add Cardio zones in the "Training Details" page. This should be exactly like the 5 zone cards in "Overview" with the exception that it is filter for a the selected date.
 - [x] Remove the first "dashboard" page. Make the default page: "Overview" without changing the name to "dashboard".
 - [x] Add loading states
-- [ ] Optimize query performance
+- [x] Optimize query performance
 - [ ] Implement responsive design for mobile devices
 
-*Commit: "feat: enhance dashboard with improved UX, error handling, and responsive design"*
+*Commit: "feat: enhance dashboard with improved UX, optimized query, and responsive design"*
 
 ### 8. Styling - Polishing Colors
 - [] 
