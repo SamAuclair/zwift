@@ -87,6 +87,65 @@ st.markdown(
     div[data-testid="stPlotlyChart"] {
         margin-top: -1rem;
     }
+
+    /* Responsive Design - Mobile devices */
+    @media (max-width: 768px) {
+        div[data-testid="stMetric"] {
+            max-width: 100%;
+            padding: 4%;
+            margin-bottom: 1rem;
+        }
+        div[data-testid="metric-container"] {
+            max-width: 100%;
+            margin-bottom: 1rem;
+        }
+        div[data-testid="stMetricValue"] {
+            font-size: 28px;
+        }
+        div[data-testid="stMetricLabel"] {
+            font-size: 16px;
+        }
+        label[data-testid="stMetricLabel"] div div p {
+            font-size: 14px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        h3 {
+            font-size: 18px;
+        }
+        .stMainBlockContainer {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        div[data-testid="stPlotlyChart"] {
+            margin-top: 0;
+        }
+        /* Make zone cards more readable on mobile */
+        div[data-testid="column"] {
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+        }
+    }
+
+    /* Responsive Design - Tablets */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        div[data-testid="stMetric"] {
+            max-width: 240px;
+        }
+        div[data-testid="metric-container"] {
+            max-width: 260px;
+        }
+        div[data-testid="stMetricValue"] {
+            font-size: 28px;
+        }
+        label[data-testid="stMetricLabel"] div div p {
+            font-size: 14px;
+        }
+        h1 {
+            font-size: 28px;
+        }
+    }
     </style>
 """,
     unsafe_allow_html=True,
@@ -272,10 +331,18 @@ try:
             height=350,
             showlegend=True,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-            margin=dict(t=20, b=10),
+            margin=dict(t=20, b=10, l=40, r=20),
+            font=dict(size=12),
         )
 
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config={
+                "displayModeBar": False,
+                "responsive": True,
+            },
+        )
     else:
         st.info("No time-series data available for this session.")
 
@@ -339,7 +406,8 @@ try:
                                 max-height: 100px;
                                 display: flex;
                                 flex-direction: column;
-                                justify-content: center;">
+                                justify-content: center;
+                                margin-bottom: 10px;">
                         <div style="font-size: 24px; margin-top: 5px;">{zone['zone_name']}</div>
                         <div style="font-size: 32px; margin-bottom: 5px;">{zone['percentage']:.1f}%</div>
                     </div>

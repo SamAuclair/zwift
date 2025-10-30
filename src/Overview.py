@@ -88,6 +88,62 @@ st.markdown(
     section[data-testid="stSidebar"] [data-testid="stImage"] {
         margin-bottom: 2rem;
     }
+
+    /* Responsive Design - Mobile devices */
+    @media (max-width: 768px) {
+        div[data-testid="stMetric"] {
+            max-width: 100%;
+            padding: 4%;
+            margin-bottom: 1rem;
+        }
+        div[data-testid="metric-container"] {
+            max-width: 100%;
+            margin-bottom: 1rem;
+        }
+        div[data-testid="stMetricValue"] {
+            font-size: 28px;
+        }
+        div[data-testid="stMetricLabel"] {
+            font-size: 16px;
+        }
+        label[data-testid="stMetricLabel"] div div p {
+            font-size: 16px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        h3 {
+            font-size: 18px;
+        }
+        .stMainBlockContainer {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        /* Make zone cards more readable on mobile */
+        div[data-testid="column"] {
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+        }
+    }
+
+    /* Responsive Design - Tablets */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        div[data-testid="stMetric"] {
+            max-width: 220px;
+        }
+        div[data-testid="metric-container"] {
+            max-width: 250px;
+        }
+        div[data-testid="stMetricValue"] {
+            font-size: 28px;
+        }
+        label[data-testid="stMetricLabel"] div div p {
+            font-size: 14px;
+        }
+        h1 {
+            font-size: 28px;
+        }
+    }
     </style>
 """,
     unsafe_allow_html=True,
@@ -322,7 +378,8 @@ try:
                                 max-height: 100px;
                                 display: flex;
                                 flex-direction: column;
-                                justify-content: center;">
+                                justify-content: center;
+                                margin-bottom: 10px;">
                         <div style="font-size: 24px; margin-top: 5px;">{zone['zone_name']}</div>
                         <div style="font-size: 32px; margin-bottom: 5px;">{zone['percentage']:.1f}%</div>
                     </div>

@@ -32,7 +32,7 @@ The project showcases:
 - [x] Remove the first "dashboard" page. Make the default page: "Overview" without changing the name to "dashboard".
 - [x] Add loading states
 - [x] Optimize query performance
-- [ ] Implement responsive design for mobile devices
+- [x] Implement responsive design for mobile devices
 
 *Commit: "feat: enhance dashboard with improved UX, optimized query, and responsive design"*
 
