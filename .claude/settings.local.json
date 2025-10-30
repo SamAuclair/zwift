@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(del \"C:\\projects\\Zwift\\src\\pages\\01_Overview.py\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

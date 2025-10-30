@@ -99,7 +99,7 @@ st.markdown(
 def get_bigquery_client():
     """Initialize and cache BigQuery client with service account credentials"""
     # Look for credentials in project root
-    project_root = Path(__file__).parent.parent.parent
+    project_root = Path(__file__).parent.parent
     credentials_path = project_root / "zwift-data-loader-key.json"
 
     if not credentials_path.exists():
@@ -120,7 +120,7 @@ def get_bigquery_client():
 client = get_bigquery_client()
 
 # Add Zwift logo to sidebar
-logo_path = Path(__file__).parent.parent / "assets" / "zwift_logo.png"
+logo_path = Path(__file__).parent / "assets" / "zwift_logo.png"
 if logo_path.exists():
     st.sidebar.image(str(logo_path), use_container_width=True)
 
@@ -209,7 +209,8 @@ def get_zone_distribution(year_cond):
             SUM(time_zone_5) as total_zone_5
         FROM `zwift_data.zone`
         {year_cond}
-    ),
+    )
+    ,
     total_time AS (
         SELECT
             total_zone_1 + total_zone_2 + total_zone_3 + total_zone_4 + total_zone_5 as total
@@ -236,9 +237,10 @@ def get_zone_distribution(year_cond):
 
 # Fetch data
 try:
-    training_metrics = get_training_metrics(year_condition)
-    performance_metrics = get_performance_metrics(year_condition)
-    zone_distribution = get_zone_distribution(year_condition)
+    with st.spinner("Loading training statistics..."):
+        training_metrics = get_training_metrics(year_condition)
+        performance_metrics = get_performance_metrics(year_condition)
+        zone_distribution = get_zone_distribution(year_condition)
 
     col1, col2, col3, col4 = st.columns(4)
 

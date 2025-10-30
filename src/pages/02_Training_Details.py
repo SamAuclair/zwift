@@ -49,7 +49,7 @@ st.markdown(
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.6);
         text-align: center;
-        max-width: 250px;
+        max-width: 275px;
         margin: 0 auto;
     }
     div[data-testid="stMetricValue"] {
@@ -225,7 +225,8 @@ def get_zone_distribution(selected_date):
 st.sidebar.header("Filters")
 
 try:
-    available_dates = get_available_dates()
+    with st.spinner("Loading available training dates..."):
+        available_dates = get_available_dates()
 
     if not available_dates:
         st.error("No training sessions found in the database.")
@@ -245,10 +246,11 @@ try:
     st.title(f"Training Details ({selected_date_str})")
 
     # Fetch data for selected date
-    session_info = get_session_info(selected_date)
-    session_metrics = get_session_metrics(selected_date)
-    timeseries_data = get_timeseries_data(selected_date)
-    zone_distribution = get_zone_distribution(selected_date)
+    with st.spinner("Loading session details..."):
+        session_info = get_session_info(selected_date)
+        session_metrics = get_session_metrics(selected_date)
+        timeseries_data = get_timeseries_data(selected_date)
+        zone_distribution = get_zone_distribution(selected_date)
 
     if session_info.empty or session_metrics.empty:
         st.error(f"No data available for {selected_date}")

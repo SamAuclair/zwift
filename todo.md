@@ -29,12 +29,9 @@ The project showcases:
 - [x] Add a "selected_year" variable to this line: st.title("📊 Zwift Training Statistics for: {selected_year}") to print the current value of the global page filter.
 - [x] Add the selected_date at the end of the title of page 2. (e.g. Training Details (2025-10-23))
 - [x] Add Cardio zones in the "Training Details" page. This should be exactly like the 5 zone cards in "Overview" with the exception that it is filter for a the selected date.
-- [ ] Remove the first "dashboard" page. Make the default page: "Overview" without changing the name to "dashboard".
-- [ ] Add tooltips and help text for metrics
-- [ ] Add loading states
-- [ ] Implement data refresh mechanisms
+- [x] Remove the first "dashboard" page. Make the default page: "Overview" without changing the name to "dashboard".
+- [x] Add loading states
 - [ ] Optimize query performance
-- [ ] Add data quality indicators
 - [ ] Implement responsive design for mobile devices
 
 *Commit: "feat: enhance dashboard with improved UX, error handling, and responsive design"*
