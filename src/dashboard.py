@@ -14,8 +14,8 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Hide the deploy button and reduce top padding */
-    header[data-testid="stHeader"] {
+    /* Hide the deploy button but keep sidebar toggle */
+    button[kind="header"] {
         display: none;
     }
     .block-container {

@@ -37,7 +37,6 @@ The project showcases:
   - [x] Make power line blue in the power/heart rate chart
   - [x] Make speed line blue in the speed over time chart
 - [x] Remove space before "Global Training Metrics" title. If possible, remove the header that contains the "Deploy" button
-
 - [x] Reduce the top margin for .stMainBlockContainer class.
 - [x] Center the text for all card title. After Last iteration they were still left aligned.
 - [x] Add a zwift logo at the top of the nav bar. the image is in "src/assets"
@@ -49,9 +48,9 @@ The project showcases:
 - [x] Reduce the padding-top and padding-bottom of the stMainBlockContainer to 10.
 - [x] Set a max width for the cards. They get to large when given the chance.
 - [x] remove the tool icons that hover in the top right corner for the plotly chart. This can be achieved by adding/modifying a plotly property in "02_Training_Details.py". Fetch the plotly doc if unsure how to proceed.
-- [ ] center the title in the card and remove some padding-top
+- [x] Center the title in the card and remove some padding-top. Careful, I am not talking about the h3 element that has a h3 "text-align: left" property. leave that one as is. I want the title such as "Total Training Sessions" and "Max Heart Rate ❤️" to be centered.
+- [x] Increase the font size of the title in the card. Modifying the "div[data-testid="stMetricLabel"]" selector doesn't work. There is a font-size property inherited by st-emotion-cache
 
-  
 *Commit: "style: implement card design, improve chart styling, modify texts, and enhance visual consistency"*
 
 ### 7. UX Enhancement & Polish

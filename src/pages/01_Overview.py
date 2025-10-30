@@ -24,15 +24,15 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Hide the deploy button and reduce top padding */
-    header[data-testid="stHeader"] {
+    /* Hide the deploy button but keep sidebar toggle */
+    button[kind="header"] {
         display: none;
     }
     .block-container {
         padding-top: 2rem;
     }
     .stMainBlockContainer {
-        padding-top: 10px;
+        padding-top: 20px;
         padding-bottom: 20px;
     }
 
@@ -50,23 +50,32 @@ st.markdown(
     div[data-testid="stMetric"] {
         background-color: #262626;
         border: 2px solid #505050;
-        padding: 5%;
+        padding: 2%;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.6);
         text-align: center;
-        max-width: 300px;
+        max-width: 250px;
         margin: 0 auto;
     }
     div[data-testid="stMetricValue"] {
-        font-size: 28px;
+        font-size: 36px;
         font-weight: bold;
         color: #FFFFFF;
         text-align: center;
     }
     div[data-testid="stMetricLabel"] {
-        font-size: 14px;
+        font-size: 18px;
         color: #BBBBBB;
         font-weight: 500;
+        text-align: center;
+        padding-top: 0;
+    }
+    label[data-testid="stMetricLabel"] {
+        display: block;
+        text-align: center;
+    }
+    label[data-testid="stMetricLabel"] div div p {
+        font-size: 18px;
     }
     /* Keep section headers left-aligned */
     h3 {
@@ -245,7 +254,7 @@ try:
 
     with col3:
         st.metric(
-            label="Avg Distance per Session",
+            label="Avg. Distance per Session",
             value=f"{training_metrics['avg_distance_km'].iloc[0]:.1f} km",
         )
 
@@ -255,7 +264,7 @@ try:
         hours = int(avg_seconds // 3600)
         minutes = int((avg_seconds % 3600) // 60)
         seconds = int(avg_seconds % 60)
-        st.metric(label="Avg Duration per Session", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
+        st.metric(label="Avg. Duration per Session", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
 
     col1, col2, col3, col4 = st.columns(4)
 
