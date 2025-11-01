@@ -25,22 +25,6 @@ The project showcases:
 
 ## Todo 📋
 
-### 7. UX Enhancement & Polish
-- [x] Add a "selected_year" variable to this line: st.title("📊 Zwift Training Statistics for: {selected_year}") to print the current value of the global page filter.
-- [x] Add the selected_date at the end of the title of page 2. (e.g. Training Details (2025-10-23))
-- [x] Add Cardio zones in the "Training Details" page. This should be exactly like the 5 zone cards in "Overview" with the exception that it is filter for a the selected date.
-- [x] Remove the first "dashboard" page. Make the default page: "Overview" without changing the name to "dashboard".
-- [x] Add loading states
-- [x] Optimize query performance
-- [x] Implement responsive design for mobile devices
-
-*Commit: "feat: enhance dashboard with improved UX, optimized query, and responsive design"*
-
-### 8. Styling - Polishing Colors
-- [] 
-
-*Commit: "style: Change design colors"*
-
 ### 9. Documentation & Portfolio Integration
 - [ ] Create comprehensive README.md
 - [ ] Document data architecture and pipeline
@@ -54,6 +38,25 @@ The project showcases:
 - [ ] Implement comparative analysis with previous periods
 
 ## Completed ✅
+
+### 8. Styling - Polishing Colors
+- [x] Modify the style of all dashboard element to fit the dashboard_style_example
+- [x] Modify the background color of the plotly chart on the second page to be the same color as the rest of the background.
+- [x] Modify the background color of header (where the collapse/expand arrow is) to be the same color as the rest of the background.
+- [x] Modify the zones card on each page to adopt the same style as the other metric cards. Although, instead of having the rainbow-colored top border, use the current color for each card (e.g. zone 1 = green, zone 5 = red).
+
+*Commit: "style: Change design colors"*
+
+### 7. UX Enhancement & Polish
+- [x] Add a "selected_year" variable to this line: st.title("📊 Zwift Training Statistics for: {selected_year}") to print the current value of the global page filter.
+- [x] Add the selected_date at the end of the title of page 2. (e.g. Training Details (2025-10-23))
+- [x] Add Cardio zones in the "Training Details" page. This should be exactly like the 5 zone cards in "Overview" with the exception that it is filter for a the selected date.
+- [x] Remove the first "dashboard" page. Make the default page: "Overview" without changing the name to "dashboard".
+- [x] Add loading states
+- [x] Optimize query performance
+- [x] Implement responsive design for mobile devices
+
+*Commit: "feat: enhance dashboard with improved UX, optimized query, and responsive design"*
 
 ### 6. Styling
 - [x] Create card styling for all metrics on both pages (rectangular with rounded edges, matching nav bar theme)

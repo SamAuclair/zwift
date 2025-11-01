@@ -19,6 +19,11 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+    /* Global styles */
+    .stApp {
+        background-color: #1a1d23;
+    }
+
     /* Hide the deploy button but keep sidebar toggle */
     button[kind="header"] {
         display: none;
@@ -31,50 +36,90 @@ st.markdown(
         padding-bottom: 20px;
     }
 
+    /* Title styling */
+    h1 {
+        font-weight: 300;
+        letter-spacing: 2px;
+        color: #ffffff;
+    }
+
     div[data-testid="metric-container"] {
-        background-color: #262626;
-        border: 2px solid #505050;
-        padding: 5%;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        background-color: #2a2d35;
+        border: none;
+        padding: 25px;
+        border-radius: 8px;
         overflow-wrap: break-word;
         text-align: center;
         max-width: 300px;
         margin: 0 auto;
+        position: relative;
     }
+
+    div[data-testid="metric-container"]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(45deg, #4a90e2, #50c878, #ffa500, #ff6b6b);
+    }
+
     div[data-testid="stMetric"] {
-        background-color: #262626;
-        border: 2px solid #505050;
-        padding: 2%;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        background-color: #2a2d35;
+        border: none;
+        padding: 25px;
+        border-radius: 8px;
         text-align: center;
         max-width: 275px;
         margin: 0 auto;
+        position: relative;
     }
+
+    div[data-testid="stMetric"]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(45deg, #4a90e2, #50c878, #ffa500, #ff6b6b);
+    }
+
     div[data-testid="stMetricValue"] {
-        font-size: 36px;
-        font-weight: bold;
-        color: #FFFFFF;
+        font-size: 32px;
+        font-weight: 300;
+        color: #ffffff;
         text-align: center;
     }
     div[data-testid="stMetricLabel"] {
-        font-size: 18px;
-        color: #BBBBBB;
-        font-weight: 500;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #8a8d93;
+        font-weight: 400;
         text-align: center;
         padding-top: 0;
+        margin-bottom: 8px;
     }
     label[data-testid="stMetricLabel"] {
         display: block;
         text-align: center;
     }
     label[data-testid="stMetricLabel"] div div p {
-        font-size: 18px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #8a8d93;
     }
-    /* Keep section headers left-aligned */
+    /* Keep section headers styled */
     h3 {
         text-align: left;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #8a8d93;
+        font-weight: 400;
     }
     /* Position logo at the top of sidebar */
     [data-testid="stSidebar"] > div:first-child {
@@ -83,6 +128,22 @@ st.markdown(
     section[data-testid="stSidebar"] [data-testid="stImage"] {
         margin-bottom: 2rem;
     }
+
+    /* Sidebar styling */
+    section[data-testid="stSidebar"] {
+        background-color: #1a1d23;
+        border-right: 1px solid #2a2d35;
+    }
+
+    /* Header with collapse/expand arrow */
+    .stAppHeader, .stAppToolbar {
+        background-color: #1a1d23;
+    }
+
+    [data-testid="stHeader"] {
+        background-color: #1a1d23;
+    }
+
     /* Reduce spacing between title and chart */
     div[data-testid="stPlotlyChart"] {
         margin-top: -1rem;
@@ -92,27 +153,28 @@ st.markdown(
     @media (max-width: 768px) {
         div[data-testid="stMetric"] {
             max-width: 100%;
-            padding: 4%;
+            padding: 20px;
             margin-bottom: 1rem;
         }
         div[data-testid="metric-container"] {
             max-width: 100%;
+            padding: 20px;
             margin-bottom: 1rem;
         }
         div[data-testid="stMetricValue"] {
             font-size: 28px;
         }
         div[data-testid="stMetricLabel"] {
-            font-size: 16px;
+            font-size: 10px;
         }
         label[data-testid="stMetricLabel"] div div p {
-            font-size: 14px;
+            font-size: 10px;
         }
         h1 {
             font-size: 24px;
         }
         h3 {
-            font-size: 18px;
+            font-size: 12px;
         }
         .stMainBlockContainer {
             padding-top: 10px;
@@ -140,7 +202,7 @@ st.markdown(
             font-size: 28px;
         }
         label[data-testid="stMetricLabel"] div div p {
-            font-size: 14px;
+            font-size: 10px;
         }
         h1 {
             font-size: 28px;
@@ -232,31 +294,31 @@ def get_zone_distribution(selected_date):
     query = f"""
     SELECT
         'Zone 1' as zone_name,
-        ROUND(percentage_time_zone_1, 2) as percentage
+        ROUND(percentage_time_zone_1, 4) as percentage
     FROM `zwift_data.zone`
     WHERE date = '{selected_date}'
     UNION ALL
     SELECT
         'Zone 2' as zone_name,
-        ROUND(percentage_time_zone_2, 2) as percentage
+        ROUND(percentage_time_zone_2, 4) as percentage
     FROM `zwift_data.zone`
     WHERE date = '{selected_date}'
     UNION ALL
     SELECT
         'Zone 3' as zone_name,
-        ROUND(percentage_time_zone_3, 2) as percentage
+        ROUND(percentage_time_zone_3, 4) as percentage
     FROM `zwift_data.zone`
     WHERE date = '{selected_date}'
     UNION ALL
     SELECT
         'Zone 4' as zone_name,
-        ROUND(percentage_time_zone_4, 2) as percentage
+        ROUND(percentage_time_zone_4, 4) as percentage
     FROM `zwift_data.zone`
     WHERE date = '{selected_date}'
     UNION ALL
     SELECT
         'Zone 5' as zone_name,
-        ROUND(percentage_time_zone_5, 2) as percentage
+        ROUND(percentage_time_zone_5, 4) as percentage
     FROM `zwift_data.zone`
     WHERE date = '{selected_date}'
     ORDER BY zone_name
@@ -333,6 +395,8 @@ try:
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
             margin=dict(t=20, b=10, l=40, r=20),
             font=dict(size=12),
+            plot_bgcolor="#1a1d23",
+            paper_bgcolor="#1a1d23",
         )
 
         st.plotly_chart(
@@ -398,18 +462,31 @@ try:
                 zone_color = zone_colors[idx]
                 st.markdown(
                     f"""
-                    <div style="background-color: {zone_color};
-                                border-radius: 10px;
+                    <div style="background-color: #2a2d35;
+                                border-radius: 8px;
                                 text-align: center;
-                                color: #000000;
-                                font-weight: bold;
-                                max-height: 100px;
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: center;
-                                margin-bottom: 10px;">
-                        <div style="font-size: 24px; margin-top: 5px;">{zone['zone_name']}</div>
-                        <div style="font-size: 32px; margin-bottom: 5px;">{zone['percentage']:.1f}%</div>
+                                color: #ffffff;
+                                padding: 25px;
+                                max-width: 275px;
+                                margin: 0 auto 10px auto;
+                                position: relative;">
+                        <div style="content: '';
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    height: 2px;
+                                    background: {zone_color};
+                                    border-radius: 8px 8px 0 0;"></div>
+                        <div style="font-size: 11px;
+                                    text-transform: uppercase;
+                                    letter-spacing: 2px;
+                                    color: #8a8d93;
+                                    font-weight: 400;
+                                    margin-bottom: 8px;">{zone['zone_name']}</div>
+                        <div style="font-size: 32px;
+                                    font-weight: 300;
+                                    color: #ffffff;">{zone['percentage']* 100:.1f}%</div>
                     </div>
                 """,
                     unsafe_allow_html=True,
