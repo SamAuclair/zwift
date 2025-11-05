@@ -25,12 +25,8 @@ The project showcases:
 
 ## Todo 📋
 
-### 9. Documentation & Portfolio Integration
+### 10. Create README & Documentation
 - [ ] Create comprehensive README.md
-- [ ] Document data architecture and pipeline
-- [ ] Add screenshots and demo video
-- [ ] Write technical blog post about the project
-- [ ] Update portfolio website with project showcase
 
 *Commit: "docs: complete project documentation and portfolio integration"*
 
@@ -38,6 +34,15 @@ The project showcases:
 - [ ] Implement comparative analysis with previous periods
 
 ## Completed ✅
+
+### 9. Create landing page of the dashboard
+- [x] Create a landing page for this project called '01_Home.py'
+- [x] Explain in a concise manner the architecture of this project and the tools used. Zwift produces .FIT files. I have a scheduled script that parse the file and upload it to Big Query. Then I use DBT to transform the data and then I used streamlit to make a dashboard.
+- [x] Explain what can be found in the other dashboard pages.
+- [x] Explains the pipeline and the page the views
+- [x] Add a "main page" that describes the project. Mention that it
+
+*Commit: "feat: Add a landing page"*
 
 ### 8. Styling - Polishing Colors
 - [x] Modify the style of all dashboard element to fit the dashboard_style_example
@@ -160,4 +165,4 @@ The project showcases:
 - Use Streamlit's caching mechanisms (@st.cache_data)
 
 **Useful Commands**
-- poetry run streamlit run src/dashboard.py
+- poetry run streamlit run src/Home.py

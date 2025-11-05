@@ -410,43 +410,8 @@ try:
     else:
         st.info("No time-series data available for this session.")
 
-    col1, col2, col3, col4 = st.columns(4)
-
-    with col1:
-        st.metric(label="Distance", value=f"{session_metrics['distance_km'].iloc[0]:.1f} km")
-
-    with col2:
-        # Convert seconds to HH:MM:SS
-        duration_seconds = session_metrics["duration"].iloc[0]
-        hours = int(duration_seconds // 3600)
-        minutes = int((duration_seconds % 3600) // 60)
-        seconds = int(duration_seconds % 60)
-        st.metric(label="Duration", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
-
-    col1, col2, col3, col4 = st.columns(4)
-
-    with col1:
-        st.metric(
-            label="Avg. Heart Rate ❤️", value=f"{int(session_metrics['avg_heart_rate'].iloc[0])} bpm"
-        )
-        st.metric(
-            label="Max Heart Rate ❤️", value=f"{int(session_metrics['max_heart_rate'].iloc[0])} bpm"
-        )
-
-    with col2:
-        st.metric(label="Avg. Power ⚡", value=f"{int(session_metrics['avg_power'].iloc[0])} W")
-        st.metric(label="Max Power ⚡", value=f"{int(session_metrics['max_power'].iloc[0])} W")
-
-    with col3:
-        st.metric(label="Avg. Speed 🚴", value=f"{session_metrics['avg_speed'].iloc[0]:.1f} km/h")
-        st.metric(label="Max Speed 🚴", value=f"{session_metrics['max_speed'].iloc[0]:.1f} km/h")
-
-    with col4:
-        st.metric(label="Avg. Cadence 🔄", value=f"{int(session_metrics['avg_cadence'].iloc[0])} rpm")
-        st.metric(label="Max Cadence 🔄", value=f"{int(session_metrics['max_cadence'].iloc[0])} rpm")
-
     # Cardio Zone Distribution Section
-    st.markdown("---")
+
     st.markdown("### Time Spent in Cardio Zones")
 
     if not zone_distribution.empty:
@@ -491,6 +456,44 @@ try:
                 """,
                     unsafe_allow_html=True,
                 )
+        st.markdown("---")
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+            st.metric(label="Distance", value=f"{session_metrics['distance_km'].iloc[0]:.1f} km")
+
+        with col2:
+            # Convert seconds to HH:MM:SS
+            duration_seconds = session_metrics["duration"].iloc[0]
+            hours = int(duration_seconds // 3600)
+            minutes = int((duration_seconds % 3600) // 60)
+            seconds = int(duration_seconds % 60)
+            st.metric(label="Duration", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+            st.metric(
+                label="Avg. Heart Rate ❤️", value=f"{int(session_metrics['avg_heart_rate'].iloc[0])} bpm"
+            )
+            st.metric(
+                label="Max Heart Rate ❤️", value=f"{int(session_metrics['max_heart_rate'].iloc[0])} bpm"
+            )
+
+        with col2:
+            st.metric(label="Avg. Power ⚡", value=f"{int(session_metrics['avg_power'].iloc[0])} W")
+            st.metric(label="Max Power ⚡", value=f"{int(session_metrics['max_power'].iloc[0])} W")
+
+        with col3:
+            st.metric(label="Avg. Speed 🚴", value=f"{session_metrics['avg_speed'].iloc[0]:.1f} km/h")
+            st.metric(label="Max Speed 🚴", value=f"{session_metrics['max_speed'].iloc[0]:.1f} km/h")
+
+        with col4:
+            st.metric(
+                label="Avg. Cadence 🔄", value=f"{int(session_metrics['avg_cadence'].iloc[0])} rpm"
+            )
+            st.metric(label="Max Cadence 🔄", value=f"{int(session_metrics['max_cadence'].iloc[0])} rpm")
     else:
         st.info("No cardio zone data available for the selected date.")
 

@@ -216,7 +216,7 @@ st.markdown(
 def get_bigquery_client():
     """Initialize and cache BigQuery client with service account credentials"""
     # Look for credentials in project root
-    project_root = Path(__file__).parent.parent
+    project_root = Path(__file__).parent.parent.parent
     credentials_path = project_root / "zwift-data-loader-key.json"
 
     if not credentials_path.exists():
@@ -237,7 +237,9 @@ def get_bigquery_client():
 client = get_bigquery_client()
 
 # Add Zwift logo to sidebar
-logo_path = Path(__file__).parent / "assets" / "zwift_logo.png"
+from pathlib import Path
+
+logo_path = Path(__file__).parent.parent / "assets" / "zwift_logo.png"
 if logo_path.exists():
     st.sidebar.image(str(logo_path), use_container_width=True)
 
@@ -261,7 +263,7 @@ available_years = get_available_years()
 year_filter = st.sidebar.selectbox("Year", options=available_years, index=0)
 
 # Display title with selected year
-st.title(f"Zwift Training Statistics for: {year_filter}")
+st.title(f"Global Statistics for: {year_filter}")
 
 # Build year filter condition for queries
 year_condition = ""
@@ -415,7 +417,6 @@ try:
         st.metric(label="Max Cadence 🔄", value=f"{int(performance_metrics['max_cadence'].iloc[0])} rpm")
 
     # Cardio Zone Distribution Section
-    st.markdown("---")
     st.markdown("### Time Spent in Cardio Zones")
 
     if not zone_distribution.empty:
