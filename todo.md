@@ -19,9 +19,9 @@ The project showcases:
 # Todo 📋
 
 ## 10. Create README & Documentation
-- [ ] Add comprehensive README.md with project description and screenshots
+- [x] Add comprehensive README.md with project description and screenshots
 
-*Commit: "docs: complete project documentation and portfolio integration"*
+*Commit: "docs: Clean README.md file and add a screenshot of the dashboard."*
 
 ## 11. Deployment
 - [ ] Generate requirement.txt
