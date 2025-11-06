@@ -1,133 +1,34 @@
-# Zwift FIT File ETL Pipeline
+# Zwift Training Dashboard
 
-A Python ETL pipeline for processing Zwift FIT files and uploading cycling data to Google BigQuery for analysis.
+[See dashboard](https://google.com)
+
+![Dashboard Screenshot](.github/images/zwift_screenshot.png)
+
+Zwift is a indoor cycling platform that allows you to ride with cyclists from around the world. At the end of each ride, a ".FIT" file that contain details about the training session is generated. I have built an ELT data pipeline that parses the .FIT file, load it into Big Query, transform the data with DBT and visualize it with the Streamlit Python library.
 
 The project showcases:
-- ETL pipeline development (Python)
-- Cloud data storage and processing (Google Cloud Platform, BigQuery)
+- ELT pipeline development (Python)
+- Cloud data storage (Google Cloud Platform, BigQuery)
 - Data transformation and modeling (DBT)
-- Interactive dashboard development (Streamlit)
-- Data visualization (Plotly)
+- Data visualization (Plotly) & interactive dashboard development (Streamlit)
 
-## Overview
-
-This project automates the collection and processing of Zwift cycling activity data by:
-- Moving FIT files from local Zwift directory to Google Drive storage
-- Parsing FIT files to extract cycling metrics (heart rate, power, cadence, speed)
-- Uploading processed data to Google BigQuery for analysis
-- Avoiding duplicate uploads by checking existing records
-
-## Prerequisites
-
-- Python 3.8+
-- Poetry (for dependency management)
-- Google Cloud service account with BigQuery access
-- Zwift application generating FIT files
-
-## Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/SamAuclair/Zwift.git
-cd Zwift
-```
-
-2. Install dependencies using Poetry:
-```bash
-poetry install
-```
-
-3. Set up Google Cloud authentication:
-   - Place your service account key file as `zwift-data-loader-key.json` in the project root
-   - Ensure the service account has BigQuery read/write permissions
-
-## Usage
-
-### Process and Upload FIT Files
-
-Run the main ETL pipeline to process all new FIT files:
-
-```bash
-poetry run python src/fitfile_etl.py
-```
-
-This will:
-- Scan the data folder for FIT files
-- Check BigQuery for existing records to avoid duplicates
-- Process new files and upload to BigQuery
-- Remove empty or corrupted files automatically
-
-### Move Files from Local Zwift Directory
-
-Move FIT files from your local Zwift directory to Google Drive:
-
-```bash
-poetry run python src/move_zwift_files.py
-```
-
-Or use the Windows batch file:
-```bash
-move_zwift_files.bat
-```
-
-## Architecture
-
-### Data Flow
-
-1. **Collection**: Zwift generates FIT files in `C:\Users\<username>\OneDrive\Documents\Zwift\Activities`
-2. **Storage**: Files are moved to `G:\My Drive\projects\zwift\data`
-3. **Processing**: FIT files are parsed and cleaned to extract relevant metrics
-4. **Upload**: Processed data is uploaded to BigQuery dataset `zwift_data.zwift_fitfile_records`
-
-### Core Functions
-
-- `parse_fitfile()`: Converts FIT files to Polars DataFrames using fitparse library
-- `clean_fitfile()`: Filters DataFrame to relevant columns (timestamp, heart_rate, power, cadence, speed, enhanced_speed)
-- `get_fitfile_names_from_folder()`: Retrieves all FIT file names from specified folder
-- `get_existing_filenames_from_bigquery()`: Queries BigQuery for existing records to prevent duplicates
-- `upload_to_bigquery()`: Uploads processed data to Google BigQuery
-
-## Data Schema
-
-The processed data includes the following fields:
-- `file_name`: Source FIT file name
-- `timestamp`: Activity timestamp
-- `heart_rate`: Heart rate (BPM)
-- `power`: Power output (watts)
-- `cadence`: Pedaling cadence (RPM)
-- `speed`: Speed (m/s)
-- `enhanced_speed`: Enhanced speed measurement (m/s)
-
-## Testing
-
-Run the test suite:
-```bash
-poetry run pytest
-```
-
-Run specific test files:
-```bash
-poetry run pytest tests/test_fitfile_etl.py
-```
+## Pipeline Details
+1. **Extracting**: Zwift generates FIT files locally, which are automatically backed up to Google Drive on a weekly schedule.
+2. **Loading**: FIT files are parsed to extract relevant fields and loaded into BigQuery, with automatic validation to prevent duplicate uploads and remove empty or corrupted files.
+3. **Transforming**: The raw data is transformed using DBT.
+4. **Visualization**: The data is visualized with Streamlit and Plotly.
 
 ## Dependencies
-
-- **Polars**: Primary DataFrame library for efficient data processing
 - **fitparse**: FIT file parsing and data extraction
-- **google-cloud-bigquery**: BigQuery integration
+- **Polars**: Primary DataFrame library for efficient data processing
 - **pandas-gbq**: Additional BigQuery functionality
+- **google-cloud-bigquery**: BigQuery integration
 - **pytest**: Testing framework
-
-## Configuration
-
-The pipeline uses these default configurations:
-- Local Zwift directory: `C:\Users\<username>\OneDrive\Documents\Zwift\Activities`
-- Google Drive storage: `G:\My Drive\projects\zwift\data`
-- BigQuery dataset: `zwift_data`
-- BigQuery table: `zwift_fitfile_records`
+- **dbt-core**: Data transformation and modeling framework
+- **plotly**: Interactive data visualization library
+- **Streamlit**: Web application framework for data dashboards
 
 ## Error Handling
-
 The pipeline includes robust error handling for:
 - Corrupted FIT files (automatically deleted)
 - Empty FIT files (automatically deleted)

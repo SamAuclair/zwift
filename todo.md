@@ -1,6 +1,4 @@
-# Zwift Cycling Data Analysis Project - TODO
-
-## Project Description
+# Project Description
 
 This project is a comprehensive data science portfolio piece that demonstrates end-to-end data engineering and analytics capabilities using Zwift cycling application data. The goal is to store, process, and analyze personal training data from Zwift to create meaningful insights and visualizations.
 
@@ -18,24 +16,23 @@ The project showcases:
 - `augmented_data`: Detailed time-series data with calculated fields
 - `zone`: Heart rate/power zone definitions for training analysis
 
-## Current Status
+# Todo 📋
 
-**Section**: 6. Styling
-**Next Task**: UX Enhancement & Polish
-
-## Todo 📋
-
-### 10. Create README & Documentation
-- [ ] Create comprehensive README.md
+## 10. Create README & Documentation
+- [ ] Add comprehensive README.md with project description and screenshots
 
 *Commit: "docs: complete project documentation and portfolio integration"*
 
-### Nice to haves. Future Enhancements (Optional)
-- [ ] Implement comparative analysis with previous periods
+## 11. Deployment
+- [ ] Generate requirement.txt
 
-## Completed ✅
 
-### 9. Create landing page of the dashboard
+## Nice to haves. Future Enhancements (Optional)
+- [ ] Add theoritical max heart rate on training chart
+
+# Completed ✅
+
+## 9. Create landing page of the dashboard
 - [x] Create a landing page for this project called '01_Home.py'
 - [x] Explain in a concise manner the architecture of this project and the tools used. Zwift produces .FIT files. I have a scheduled script that parse the file and upload it to Big Query. Then I use DBT to transform the data and then I used streamlit to make a dashboard.
 - [x] Explain what can be found in the other dashboard pages.
@@ -44,7 +41,7 @@ The project showcases:
 
 *Commit: "feat: Add a landing page"*
 
-### 8. Styling - Polishing Colors
+## 8. Styling - Polishing Colors
 - [x] Modify the style of all dashboard element to fit the dashboard_style_example
 - [x] Modify the background color of the plotly chart on the second page to be the same color as the rest of the background.
 - [x] Modify the background color of header (where the collapse/expand arrow is) to be the same color as the rest of the background.
@@ -52,7 +49,7 @@ The project showcases:
 
 *Commit: "style: Change design colors"*
 
-### 7. UX Enhancement & Polish
+## 7. UX Enhancement & Polish
 - [x] Add a "selected_year" variable to this line: st.title("📊 Zwift Training Statistics for: {selected_year}") to print the current value of the global page filter.
 - [x] Add the selected_date at the end of the title of page 2. (e.g. Training Details (2025-10-23))
 - [x] Add Cardio zones in the "Training Details" page. This should be exactly like the 5 zone cards in "Overview" with the exception that it is filter for a the selected date.
@@ -63,7 +60,7 @@ The project showcases:
 
 *Commit: "feat: enhance dashboard with improved UX, optimized query, and responsive design"*
 
-### 6. Styling
+## 6. Styling
 - [x] Create card styling for all metrics on both pages (rectangular with rounded edges, matching nav bar theme)
 - [x] Round all distance units (km, km/h) to 1 decimal place in metrics and chart tooltips
 - [x] Global page modifications:
@@ -91,7 +88,7 @@ The project showcases:
 
 *Commit: "style: implement card design, improve chart styling, modify texts, and enhance visual consistency"*
 
-### 5. Training Session Detail Dashboard (Page 2)
+## 5. Training Session Detail Dashboard (Page 2)
 - [x] Create training session detail page layout
 - [x] Implement date picker filter (only dates with existing training sessions)
 - [x] Set default filter to latest training date
@@ -109,7 +106,7 @@ The project showcases:
 
 *Commit: "feat: implement training session detail page with metrics and time-series visualization"*
 
-### 4. Global Metrics Dashboard (Page 1)
+## 4. Global Metrics Dashboard (Page 1)
 - [x] Create main metrics page layout
 - [x] Implement year filter (default: "all years") - dynamically loads years from data
 - [x] Create score cards for global training metrics:
@@ -129,7 +126,7 @@ The project showcases:
 
 *Commit: "feat: implement global metrics dashboard with training statistics and performance metrics"*
 
-### 3. Dashboard Infrastructure Setup
+## 3. Dashboard Infrastructure Setup
 - [x] Set up Streamlit application structure
 - [x] Configure BigQuery connection for Streamlit
 - [x] Implement dark theme configuration
@@ -137,18 +134,18 @@ The project showcases:
 
 *Commit: "feat: initialize Streamlit dashboard with BigQuery connection and dark theme"*
 
-### 2. Data Transformation & Modeling
+## 2. Data Transformation & Modeling
 - [x] Build DBT models to create augmented tables in BigQuery
 - [x] Build DBT models to create aggregated tables in BigQuery
 - [x] Establish data architecture with training, augmented_data, and zone tables
 
-### 1. Data Collection & Backup Infrastructure
+## 1. Data Collection & Backup Infrastructure
 - [x] Backup .fit files to Google Drive
 - [x] Parse .fit files and extract relevant training data
 - [x] Upload processed data to BigQuery
 
 
-## Technical Notes
+# Technical Notes
 
 **Dependencies**:
 - streamlit
