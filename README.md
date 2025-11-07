@@ -1,6 +1,6 @@
 # Zwift Training Dashboard
 
-[Link to Zwift Dashboard](https://google.com)
+[Link to Zwift Dashboard](https://zwift-dashboard.streamlit.app/)
 
 ---
 

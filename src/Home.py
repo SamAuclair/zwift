@@ -156,10 +156,12 @@ st.title("🚴 Zwift Dashboard")
 
 st.markdown(
     """
-Zwift is a indoor cycling platform that allows you to ride with cyclists from around the world. 
+Zwift is a indoor cycling platform that allows you to ride with cyclists from around the world.
 At the end of each ride, a ".FIT" file that contain details about the training session is generated.
-I have built an ELT data pipeline that parses the .FIT file, load it into Big Query, transform the data with DBT and visualize it with the Streamlit Python library.
-This project demonstrates end-to-end data engineering and visualization capabilities.
+I have built an ELT data pipeline that parses the .FIT file, load it into Big Query, 
+transform the data with DBT and visualize it with the Streamlit Python library.
+This project demonstrates end-to-end data engineering and visualization capabilities. 
+For more details, [see the project on github](https://github.com/SamAuclair/zwift).
 """
 )
 
@@ -168,9 +170,9 @@ st.markdown(
     <div class="pipeline-box">
         <span class="pipeline-step">Zwift (.FIT files)</span>
         <span class="pipeline-arrow">→</span>
-        <span class="pipeline-step">Python (Extract, Load)</span>
+        <span class="pipeline-step">Python (Extract)</span>
         <span class="pipeline-arrow">→</span>
-        <span class="pipeline-step">BigQuery</span>
+        <span class="pipeline-step">BigQuery (Load)</span>
         <span class="pipeline-arrow">→</span>
         <span class="pipeline-step">DBT (Transform)</span>
         <span class="pipeline-arrow">→</span>
