@@ -10,6 +10,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 from google.cloud import bigquery
+from google.oauth2 import service_account
 
 st.set_page_config(
     page_title="Zwift Dashboard", page_icon="🚴", layout="wide", initial_sidebar_state="expanded"
@@ -213,17 +214,38 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Get BigQuery client from main app
-if "client" not in st.session_state:
-    import os
-    from pathlib import Path
+# Initialize BigQuery client
+@st.cache_resource
+def get_bigquery_client():
+    """Initialize and cache BigQuery client with service account credentials"""
+    try:
+        # Try to use Streamlit secrets (for Streamlit Cloud deployment)
+        if "gcp_service_account" in st.secrets:
+            credentials = service_account.Credentials.from_service_account_info(
+                st.secrets["gcp_service_account"]
+            )
+            return bigquery.Client(credentials=credentials, project=st.secrets["gcp_service_account"]["project_id"])
+        else:
+            # Fall back to local JSON file (for local development)
+            import os
+            from pathlib import Path
 
-    project_root = Path(__file__).parent.parent.parent
-    credentials_path = project_root / "zwift-data-loader-key.json"
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(credentials_path)
-    st.session_state.client = bigquery.Client()
+            project_root = Path(__file__).parent.parent.parent
+            credentials_path = project_root / "zwift-data-loader-key.json"
 
-client = st.session_state.client
+            if not credentials_path.exists():
+                st.error(f"BigQuery credentials not found. Please configure secrets or add credentials file at: {credentials_path}")
+                st.stop()
+
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(credentials_path)
+            return bigquery.Client()
+
+    except Exception as e:
+        st.error(f"Failed to initialize BigQuery client: {e}")
+        st.stop()
+
+
+client = get_bigquery_client()
 
 # Add Zwift logo to sidebar
 from pathlib import Path
