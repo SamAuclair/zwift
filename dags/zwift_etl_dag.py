@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
 
 # Ignore unresolved dependencies since this file is executed by Airflow, not the local environment.
+import pendulum  # type: ignore
 from airflow import DAG  # type: ignore
 from airflow.operators.bash import BashOperator  # type: ignore
 
-# Default arguments
+local_tz = pendulum.timezone("America/Montreal")
+
 default_args = {
     "owner": "sam",
     "depends_on_past": False,
@@ -15,11 +17,11 @@ default_args = {
 }
 
 with DAG(
-    "zwift_etl_daily",
+    "Zwift",
     default_args=default_args,
     description="Daily Zwift data ETL pipeline",
     schedule="0 17 * * *",  # 5pm daily (17:00 in 24-hour format)
-    start_date=datetime(2026, 1, 1),
+    start_date=datetime(2026, 1, 1, tzinfo=local_tz),
     catchup=False,
     tags=["zwift", "etl"],
 ) as dag:
