@@ -23,25 +23,24 @@ with DAG(
     schedule="0 17 * * *",  # 5pm daily (17:00 in 24-hour format)
     start_date=datetime(2026, 1, 1, tzinfo=local_tz),
     catchup=False,
-    tags=["zwift", "etl"],
 ) as dag:
 
     # Task 1: Move Zwift files
     move_files = BashOperator(
         task_id="move_zwift_files",
-        bash_command="cd /mnt/c/projects/zwift && poetry run python src/move_zwift_files.py",
+        bash_command="cd /mnt/c/projects/zwift && /mnt/c/Users/aucla/AppData/Roaming/Python/Scripts/poetry.exe run python src/move_zwift_files.py",
     )
 
     # Task 2: Process FIT files
     process_fit = BashOperator(
         task_id="process_fit_files",
-        bash_command="cd /mnt/c/projects/zwift && poetry run python src/fitfile_etl.py",
+        bash_command="cd /mnt/c/projects/zwift && /mnt/c/Users/aucla/AppData/Roaming/Python/Scripts/poetry.exe run python src/fitfile_etl.py",
     )
 
     # Task 3: Run DBT
     run_dbt = BashOperator(
         task_id="run_dbt",
-        bash_command="cd /mnt/c/projects/zwift && poetry run dbt run",
+        bash_command="cd /mnt/c/projects/zwift && /mnt/c/Users/aucla/AppData/Roaming/Python/Scripts/poetry.exe run dbt run",
     )
 
     # Define task dependencies
