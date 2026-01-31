@@ -478,7 +478,7 @@ try:
                 """,
                     unsafe_allow_html=True,
                 )
-        st.markdown("---")
+        st.markdown("### Other Metrics")
 
         col1, col2, col3, col4 = st.columns(4)
 

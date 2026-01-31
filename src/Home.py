@@ -170,6 +170,8 @@ st.markdown(
     <div class="pipeline-box">
         <span class="pipeline-step">Zwift (.FIT files)</span>
         <span class="pipeline-arrow">→</span>
+        <span class="pipeline-step">Airflow (Orchestrate)</span>
+        <span class="pipeline-arrow">→</span>
         <span class="pipeline-step">Python (Extract)</span>
         <span class="pipeline-arrow">→</span>
         <span class="pipeline-step">BigQuery (Load)</span>
